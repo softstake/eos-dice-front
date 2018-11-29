@@ -22,7 +22,12 @@ $fullhd-enabled: false;
 // Update some of Bulma's component variables
 $body-background-color: $beige-lighter;
 $control-border-width: 2px;
-$input-border-color: transparent;
 $input-shadow: none;
 
+// slider
+
+
 @import "~bulma/bulma";
+@import "~bulma-tooltip/src/sass/index.sass";
+@import "~bulma-slider/src/sass/index.sass";
+

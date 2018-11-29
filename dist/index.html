@@ -35,11 +35,11 @@
     <div class="container">
       <div class="box">
         <div class="columns">
-          <div class="column">
+          <div class="column is-two-thirds">
+            <label class="label is-small">BET AMOUNT</label>
             <div class="field has-addons">
-              <label class="label">Bet amount</label>
               <div class="control is-expanded">
-                <input class="input" type="text" placeholder="e.g Alex Smith">
+                <input class="input" type="text" placeholder="">
               </div>
               <div class="control">
                 <button class="button">
@@ -59,16 +59,53 @@
             </div>
           </div>
           <div class="column">
+            <label class="label is-small">PAYOUT ON WIN</label>
             <div class="field has-addons">
-              <label class="label">Payout on win</label>
               <div class="control is-expanded">
-                <input class="input" type="text" placeholder="1000">
+                <input class="input" type="text" placeholder="">
               </div>
             </div>
           </div>
         </div>
+        <div class="box">
+          <div class="columns is-mobile">
+            <div class="column has-text-centered">
+              <label class="label is-small">ROLL UNDER TO WIN</label>
+              <h3 class="title is-3"><output for="rollUnderSlider">50</output>↓</h3>
+            </div>
+            <div class="column has-text-centered">
+              <label class="label is-small">PAYOUT</label>
+              <h3 class="title is-3">1.48x</h3>
+            </div>
+            <div class="column has-text-centered">
+              <label class="label is-small">WIN CHANCE</label>
+              <h3 class="title is-3">44.88%</h3>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+         <div class="column has-text-centered">
+           <div class="field is-expanded">
+            <input class="slider is-medium  has-output" step="1" min="2" max="96" value="50" type="range" id="rollUnderSlider">
+          </div>
+         </div>
+        </div>
+        <div class="columns is-mobile is-vcentered">
+          <div class="column has-text-centered">
+            <span class="title is-5">100.00 EOS</span>
+          </div>
+          <div class="column has-text-centered">
+            <button class="button is-link is-large">
+              Login
+            </button>
+          </div>
+          <div class="column has-text-centered">
+            <span class="title is-5">0.00 SVNS</span>
+          </div>
+        </div>
       </div>
-    </div>
+
+
     </div>
   </section>
   <script type="text/javascript">
@@ -80,6 +117,80 @@
         nav.classList.toggle('is-active');
       });
     })();
+    (
+      function () {
+        // Find output DOM associated to the DOM element passed as parameter
+        function findOutputForSlider(element) {
+          var idVal = element.id;
+          outputs = document.getElementsByTagName('output');
+          for (var i = 0; i < outputs.length; i++) {
+            if (outputs[i].htmlFor == idVal)
+              return outputs[i];
+          }
+        }
+
+        function getSliderOutputPosition(slider) {
+          // Update output position
+          var newPlace,
+            minValue;
+
+          var style = window.getComputedStyle(slider, null);
+          // Measure width of range input
+          sliderWidth = parseInt(style.getPropertyValue('width'), 10);
+
+          // Figure out placement percentage between left and right of input
+          if (!slider.getAttribute('min')) {
+            minValue = 0;
+          } else {
+            minValue = slider.getAttribute('min');
+          }
+          var newPoint = (slider.value - minValue) / (slider.getAttribute('max') - minValue);
+
+          // Prevent bubble from going beyond left or right (unsupported browsers)
+          if (newPoint < 0) {
+            newPlace = 0;
+          } else if (newPoint > 1) {
+            newPlace = sliderWidth;
+          } else {
+            newPlace = sliderWidth * newPoint;
+          }
+
+          return {
+            'position': newPlace + 'px'
+          }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+          // Get all document sliders
+          var sliders = document.querySelectorAll('input[type="range"].slider');
+          [].forEach.call(sliders, function (slider) {
+            var output = findOutputForSlider(slider);
+            if (output) {
+              if (slider.classList.contains('has-output-tooltip')) {
+                // Get new output position
+                var newPosition = getSliderOutputPosition(slider);
+
+                // Set output position
+                output.style['left'] = newPosition.position;
+              }
+
+              // Add event listener to update output when slider value change
+              slider.addEventListener('input', function (event) {
+                if (event.target.classList.contains('has-output-tooltip')) {
+                  // Get new output position
+                  var newPosition = getSliderOutputPosition(event.target);
+
+                  // Set output position
+                  output.style['left'] = newPosition.position;
+                }
+
+                // Update output with slider value
+                output.value = event.target.value;
+              });
+            }
+          });
+        });
+      })();
   </script>
 
 
