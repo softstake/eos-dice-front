@@ -1,5 +1,6 @@
-const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const path = require('path')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const {VueLoaderPlugin} = require('vue-loader')
 
 module.exports = {
   mode: 'development',
@@ -21,10 +22,16 @@ module.exports = {
           'sass-loader'
         ]
       })
-    }]
+    },
+    {
+      test: /\.vue$/,
+      use: 'vue-loader'
+    }
+  ]
   },
   plugins: [
     new ExtractTextPlugin('css/mystyles.css'),
+    new VueLoaderPlugin()
   ]
 };
 
