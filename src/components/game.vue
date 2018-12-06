@@ -11,7 +11,7 @@
                             </div>
 
                             <div class="control">
-                                <button class="button" @click="setBet(.5)">
+                                <button class="button" @click="setBet(0.5)">
                                     1/2
                                 </button>
                             </div>
@@ -31,7 +31,7 @@
                         <label class="label is-small">PAYOUT ON WIN</label>
                         <div class="field has-addons">
                             <div class="control is-expanded">
-                                <input class="input" type="text" placeholder="">
+                                <input class="input" type="text" v-model="payWin">
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                         <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
                     </div>
                     <div class="column has-text-centered">
-                        <button v-if="account" class="button">ROLL DICE</button>
+                        <button v-if="!account" class="button">ROLL DICE</button>
                         <button v-else @click="login" class="button">LOGIN</button>
                     </div>
                     <div class="column has-text-centered">
@@ -78,17 +78,29 @@
 
 <script>
     import vueSlider from 'vue-slider-component'
+    import network from '../network'
+    import { Api, JsonRpc, JsSignatureProvider } from "eosjs";
+    import ScatterJS from "scatterjs-core"
+    import ScatterEOS from "scatterjs-plugin-eosjs2"
+
+    ScatterJS.plugins(new ScatterEOS())
+
+    const endpoint = "http://jungle2.cryptolions.io:80"
 
     export default {
         components: {
             vueSlider
+        },
+        mounted() {
+            this.getBalance();
+            //this.getPool();
         },
         data() {
             return {
                 rollUnder: 50,
                 bet: 1,
                 currentEOS: 0,
-                poolBalance: 0,
+                poolBalance: 100,
                 //account: {name: true},
                 sliderOptions: {
                     data: null,
@@ -140,12 +152,32 @@
                     this.currentEOS = Number(core_liquid_balance.replace(/\sEOS/, ''));
                 });
             },
+            getPool() {
+                Promise.all([
+                    api.getTableRows({
+                        json: true,
+                        code: 'eosio.token',
+                        table: 'accounts',
+                        scope: this.$contractAccount
+                    }),
+                    api.getTableRows({
+                        json: true,
+                        code: this.$contractAccount,
+                        table: 'envs',
+                        scope: this.$contractAccount
+                    })
+                ]).then(([accountBalance, poolBalance]) => {
+                    this.poolBalance = accountBalance.rows[0].balance.slice(0, -4) -
+                        poolBalance.rows[0].locked.slice(0, -4)
+                });
+            },
             setBet(rate) {
                 const {
                     poolBalance,
                     currentEOS
                 } = this
                 let bet = rate ? this.bet * rate : this.currentEOS
+                console.log("BET: " + bet, "max bet amount: " + this.maxBetAmount(), " current eos: ", currentEOS)
                 switch (true) {
                     case (bet < 0.1):
                         bet = 0.1
@@ -157,23 +189,40 @@
                         bet = this.maxBetAmount()
                         break
                 }
+                console.log("Bet: ", bet)
                 this.bet = Number(bet).toFixed(4)
             },
-            maxBetAmount() {
-                return this.floor(this.poolBalance / 100 / (98 / this.winChance) * 0.9, 4)
+
+            floor(value, decimals) {
+                return Number(Math.floor(value + 'e' + decimals) + 'e-' + decimals)
             },
+
+            maxBetAmount() {
+                return this.floor(this.poolBalance / 5 / (98 / this.winChance), 4)
+            },
+
             login() {
-                scatter.getIdentity({
-                    accounts: [network]
-                }).then(() => {
-                    const account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
-                    if (!account) return;
-                    this.$store.commit('UPDATE_ACCOUNT', account);
+                console.log(this.$contractAccount)
+
+                ScatterJS.scatter.connect(this.$contractAccount).then(connected => { 
+                    if (!connected) console.log("Issue Connecting")
+                    const scatter = ScatterJS.scatter
+                    const requiredFields = {
+					    accounts: [network]
+				    }
+                    scatter.getIdentity(requiredFields).then(() => {
+                        console.log('Success')
+                        this.$account = scatter.identity.accounts.find(x => x.blockchain === 'eos')
+                        const rpc = new JsonRpc(endpoint)
+					    this.$eos = scatter.eos(network, Api, { rpc })
+                    })
+                    window.ScatterJS = null
                 }).catch(e => {
-                    this.$message.warning(e.message);
-                });
+                    console.log(e.message)
+                })
             },
         },
+
         computed: {
             winChance() {
                 return this.rollUnder - 1
@@ -184,12 +233,11 @@
             },
 
             payWin() {
-                return (this.eos * this.payOut).toFixed(4)
+                return (this.bet * this.payOut).toFixed(4)
             },
 
             account() {
-                return false;
-                //return this.$store.state.account
+                return this.$store.state.account
             }
         }
     }

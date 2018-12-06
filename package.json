@@ -37,6 +37,7 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "buefy": "^0.7.1",
     "bulma-extensions": "^4.0.0",
     "vue-slide-bar": "^1.1.9",
     "vue-slider-component": "^2.8.2",
