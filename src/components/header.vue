@@ -16,8 +16,8 @@
                         <a href="#" class="navbar-item">Tokens Airdrop</a>
                         <a href="#" class="navbar-item">How to play</a>
                         <span class="navbar-item">
-                            <a v-if="account" @click="logout" class="button is-link">Logout {{account}}</a>
-                            <a v-else @click="login" class="button is-link">Login</a>    
+                            <a v-if="account.name" @click="logout" class="button is-link">Logout {{account.name}}</a>
+                            <a v-else @click="login" class="button is-link">Login</a>
                         </span>
                     </div>
                 </div>
@@ -31,19 +31,25 @@
     export default {
         data() {
             return {
-                showNav: false,
-                account: this.$account ? this.$account.name : undefined,
+                showNav: false
             }
         },
         methods: {
             login() {
-                console.log("Login from header")
+                console.log("Login from header, no scatter object here")
+                // need to use scatter here
             },
             logout() {
-                this.$scatter.forgetIdentity().then(() => {
-                    this.$message.success('User logout success')
-                    this.$account = undefined
-                })
+                //this.$scatter.forgetIdentity().then(() => {
+                //    this.$message.success('User logout success')
+                console.log("Logout from header, no scatter object here")
+                this.$store.commit('UPDATE_ACCOUNT', {})
+                //})
+            }
+        },
+        computed: {
+            account() {
+                return this.$store.state.account
             }
         }
     }

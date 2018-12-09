@@ -64,7 +64,7 @@
                         <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
                     </div>
                     <div class="column has-text-centered">
-                        <button v-if="account" class="button">ROLL DICE</button>
+                        <button v-if="account.name" class="button">ROLL DICE</button>
                         <button v-else @click="login" class="button">LOGIN</button>
                     </div>
                     <div class="column has-text-centered">
@@ -105,9 +105,7 @@
                 rollUnder: 50,
                 bet: 1,
                 currentEOS: 0,
-                poolBalance: 100,
-                account: this.$account ? this.$account.name : undefined,
-                //account: {name: true},
+                poolBalance: 99,
                 sliderOptions: {
                     data: null,
                     eventType: 'auto',
@@ -152,11 +150,12 @@
                     this.currentEOS = 0;
                     return;
                 }
-                return api.getAccount(this.account.name).then(({
+                /*return api.getAccount(this.account.name).then(({
                     core_liquid_balance
                 }) => {
                     this.currentEOS = Number(core_liquid_balance.replace(/\sEOS/, ''))
-                })
+                })*/
+                return 100  // MOCK
             },
             getPool() {
                 Promise.all([
@@ -218,9 +217,10 @@
                         console.log('Network suggest ok')
                         scatter.getIdentity(requiredFields).then(() => {
                             console.log('Got identity success')
-                            this.$account = scatter.identity.accounts.find(x => x.blockchain ===
+                            const account = scatter.identity.accounts.find(x => x.blockchain ===
                                 'eos')
-                            console.log("this account: " + this.$account.name)
+                            console.log("this account: " + account.name)
+                            this.$store.commit('UPDATE_ACCOUNT', account)
                         }).catch(e => {
                             console.log('User rejected select identity')
                             console.log(e.message)
@@ -236,7 +236,6 @@
                 })
             },
         },
-
         computed: {
             winChance() {
                 return this.rollUnder - 1
@@ -249,10 +248,14 @@
             payWin() {
                 return (this.bet * this.payOut).toFixed(4)
             },
-           // account() {
-                 ///console.log(" a Accosssssunt: " , this.$account ? false: this.$account.name)
-            //     return this.$account 
-            //}
+            account() {
+                return this.$store.state.account
+            }
+        },
+        watch: {
+            account(){
+                console.log("Hi from {account} property watcher")
+            }
         }
     }
 </script>
