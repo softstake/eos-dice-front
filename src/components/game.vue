@@ -64,11 +64,11 @@
                         <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
                     </div>
                     <div class="column has-text-centered">
-                        <button v-if="!account" class="button">ROLL DICE</button>
+                        <button v-if="account" class="button">ROLL DICE</button>
                         <button v-else @click="login" class="button">LOGIN</button>
                     </div>
                     <div class="column has-text-centered">
-                        <span class="title is-5">0.00 SVNS</span>
+                        <span class="title is-5"></span>
                     </div>
                 </div>
             </div>
@@ -78,22 +78,27 @@
 
 <script>
     import vueSlider from 'vue-slider-component'
-    import network from '../network'
-    import { Api, JsonRpc, JsSignatureProvider } from "eosjs";
-    import ScatterJS from "scatterjs-core"
-    import ScatterEOS from "scatterjs-plugin-eosjs2"
+    import {network} from '../network'
+    import Eos from 'eosjs'
+    import ScatterJS from 'scatterjs-core'
+    import ScatterEOS from 'scatterjs-plugin-eosjs2'
 
     ScatterJS.plugins(new ScatterEOS())
 
-    const endpoint = "http://jungle2.cryptolions.io:80"
+    const endpoint = network.protocol + '://' + network.host + ':' + network.port
+    const scatter = ScatterJS.scatter
+    //const eos = scatter.eos(network, Eos, { expireInSeconds:60, debug: true })
+    const eos = Eos({httpEndpoint:endpoint, signatureProvider:ScatterJS.scatter.eosHook(network)})
+
 
     export default {
         components: {
             vueSlider
         },
         mounted() {
-            this.getBalance();
-            //this.getPool();
+            this.getBalance()
+            console.log(network)
+            //this.getPool()
         },
         data() {
             return {
@@ -101,6 +106,7 @@
                 bet: 1,
                 currentEOS: 0,
                 poolBalance: 100,
+                account: this.$account ? this.$account.name : undefined,
                 //account: {name: true},
                 sliderOptions: {
                     data: null,
@@ -142,15 +148,15 @@
         },
         methods: {
             getBalance() {
-                if (!this.account.name) {
+                if (!this.account) {
                     this.currentEOS = 0;
                     return;
                 }
                 return api.getAccount(this.account.name).then(({
                     core_liquid_balance
                 }) => {
-                    this.currentEOS = Number(core_liquid_balance.replace(/\sEOS/, ''));
-                });
+                    this.currentEOS = Number(core_liquid_balance.replace(/\sEOS/, ''))
+                })
             },
             getPool() {
                 Promise.all([
@@ -203,22 +209,30 @@
 
             login() {
                 console.log(this.$contractAccount)
+                const requiredFields = {
+                    accounts: [network]
+                }
 
-                ScatterJS.scatter.connect(this.$contractAccount).then(connected => { 
-                    if (!connected) console.log("Issue Connecting")
-                    const scatter = ScatterJS.scatter
-                    const requiredFields = {
-					    accounts: [network]
-				    }
-                    scatter.getIdentity(requiredFields).then(() => {
-                        console.log('Success')
-                        this.$account = scatter.identity.accounts.find(x => x.blockchain === 'eos')
-                        const rpc = new JsonRpc(endpoint)
-					    this.$eos = scatter.eos(network, Api, { rpc })
+                ScatterJS.scatter.connect(this.$contractAccount).then(connected => {
+                    scatter.suggestNetwork(network).then(added => {
+                        console.log('Network suggest ok')
+                        scatter.getIdentity(requiredFields).then(() => {
+                            console.log('Got identity success')
+                            this.$account = scatter.identity.accounts.find(x => x.blockchain ===
+                                'eos')
+                            console.log("this account: " + this.$account.name)
+                        }).catch(e => {
+                            console.log('User rejected select identity')
+                            console.log(e.message)
+                        })
+                        window.ScatterJS = null
+                    }).catch(e => {
+                        console.log(e.message)
                     })
-                    window.ScatterJS = null
                 }).catch(e => {
+                    console.log('Scatter Connecting issue')
                     console.log(e.message)
+                    // Sent event to open Download scatter modal is here
                 })
             },
         },
@@ -235,10 +249,10 @@
             payWin() {
                 return (this.bet * this.payOut).toFixed(4)
             },
-
-            account() {
-                return this.$store.state.account
-            }
+           // account() {
+                 ///console.log(" a Accosssssunt: " , this.$account ? false: this.$account.name)
+            //     return this.$account 
+            //}
         }
     }
 </script>

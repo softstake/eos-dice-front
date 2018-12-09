@@ -9,12 +9,6 @@
 
 <script>
     export default {
-        mounted() {
-            console.log("mounted!")
-            this.$store.commit('UPDATE_ACCOUNT', {})
-
-        },
-
         components: {
             diceHeader: require('./components/header.vue').default,
             diceGame: require('./components/game.vue').default,

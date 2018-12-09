@@ -1,7 +1,10 @@
-const network = {
+const url = new URL(location.href)
+const isTest = url.searchParams.get('test')
+
+export const network = {
     blockchain:'eos',
-    protocol:'http',
-    host:'jungle2.cryptolions.io',
-    port:80,
-    chainId:'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
+    protocol:'https',
+    host: isTest ? 'jungle2.cryptolions.io': 'api.eosnewyork.io',
+    port: 443,
+    chainId: isTest ? 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473': 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 }

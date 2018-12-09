@@ -31,7 +31,8 @@
     export default {
         data() {
             return {
-                showNav: false
+                showNav: false,
+                account: this.$account ? this.$account.name : undefined,
             }
         },
         methods: {
@@ -40,14 +41,9 @@
             },
             logout() {
                 this.$scatter.forgetIdentity().then(() => {
-                    this.$message.success('User logout success');
-                    this.$store.commit('UPDATE_ACCOUNT', {});
-                });
-            }
-        },
-        computed: {
-            account(){
-                return this.$store.state.account
+                    this.$message.success('User logout success')
+                    this.$account = undefined
+                })
             }
         }
     }
