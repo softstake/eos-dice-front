@@ -10,10 +10,10 @@ import 'buefy/dist/buefy.css'
 require('./mystyles.scss')
 
 
-ScatterJS.plugins( new ScatterEOS() )
+ScatterJS.plugins(new ScatterEOS())
 
 //Vue.prototype.$account = undefined
-Vue.prototype.$contractAccount = 'sevenscas1no'
+Vue.prototype.$contractAccount = 'sevenscasino'
 
 Vue.use(Toast)
 
