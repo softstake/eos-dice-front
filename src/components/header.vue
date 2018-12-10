@@ -42,6 +42,9 @@ export default {
       showNav: false
     };
   },
+  mounted() {
+      this.login();
+  },
   methods: {
     login() {
       console.log("Login from header");
