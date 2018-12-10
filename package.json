@@ -18,7 +18,6 @@
     "bulma-slider": "^2.0.0",
     "bulma-tooltip": "^2.0.2",
     "css-loader": "^1.0.1",
-    "eosjs": "^16.0.9",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "js-sha256": "^0.9.0",
     "node-sass": "^4.10.0",
@@ -39,6 +38,7 @@
   "dependencies": {
     "buefy": "^0.7.1",
     "bulma-extensions": "^4.0.0",
+    "eosjs": "^20.0.0-beta2",
     "vue-slide-bar": "^1.1.9",
     "vue-slider-component": "^2.8.2",
     "vuex": "^3.0.1"
