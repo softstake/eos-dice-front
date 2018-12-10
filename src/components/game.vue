@@ -157,24 +157,34 @@ export default {
       Promise.all([
         rpc.get_table_rows({
           code: "eosio.token",
-          scope: "sevenscasino",
+          scope: this.$contractAccount,
           table: "accounts"
         }),
         rpc.get_table_rows({
-          code: "sevenscasino",
-          scope: "sevenscasino",
+          code: this.$contractAccount,
+          scope: this.$contractAccount,
           table: "tabenvs"
         })
-      ]).then(([accountBalance, locked]) => {
-        this.availableBalance =
-          accountBalance.rows[0].balance.slice(0, -4) -
-          locked.rows[0].locked.slice(0, -4);
-      });
+      ])
+        .then(([accountBalance, locked]) => {
+          this.availableBalance =
+            accountBalance.rows[0].balance.slice(0, -4) -
+            locked.rows[0].locked.slice(0, -4);
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
     },
     setBet(rate) {
       let minBet = 0.1;
       const { availableBalance, currentEOS } = this;
-      let bet = rate ? this.bet * rate : this.maxBetAmount();
+
+      let maxBet = this.maxBetAmount();
+      if (this.account.name && this.currentEOS < maxBet) {
+        maxBet = this.currentEOS;
+      }
+
+      let bet = rate ? this.bet * rate : maxBet;
 
       console.log(
         "BET: " + bet,
