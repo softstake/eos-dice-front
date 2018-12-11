@@ -7,17 +7,17 @@
             <label class="label is-small">BET AMOUNT</label>
             <div class="field has-addons">
               <div class="control is-expanded has-icon-right">
-                <input class="input" type="text" v-model="bet">
+                <input class="input" type="text" v-model="bet" @blur="validBet">
               </div>
 
               <div class="control">
-                <button class="button" @click="setBet(0.5)">1/2</button>
+                <button class="button" @click="setBet(0.5); maxFlag=false;">1/2</button>
               </div>
               <div class="control">
-                <button class="button" @click="setBet(2)">2X</button>
+                <button class="button" @click="setBet(2); maxFlag=false;">2X</button>
               </div>
               <div class="control">
-                <button class="button" @click="setBet()">MAX</button>
+                <button class="button" @click="setBet(); maxFlag=true;">MAX</button>
               </div>
             </div>
           </div>
@@ -88,13 +88,14 @@ export default {
   },
   mounted() {
     this.getBalance();
-    console.log(network);
     this.getPool();
   },
   data() {
     return {
       rollUnder: 50,
       bet: 1,
+      minBet: 0.1,
+      maxFlag: false,
       currentEOS: 0,
       availableBalance: 0,
       sliderOptions: {
@@ -139,9 +140,8 @@ export default {
     getBalance() {
       if (!this.account.name) {
         this.currentEOS = 0;
-        return;
       }
-      rpc
+      return rpc
         .get_table_rows({
           code: "eosio.token",
           scope: this.account.name,
@@ -176,9 +176,6 @@ export default {
         });
     },
     setBet(rate) {
-      let minBet = 0.1;
-      const { availableBalance, currentEOS } = this;
-
       let maxBet = this.maxBetAmount();
       if (this.account.name && this.currentEOS < maxBet) {
         maxBet = this.currentEOS;
@@ -187,24 +184,24 @@ export default {
       let bet = rate ? this.bet * rate : maxBet;
 
       console.log(
+        "RATE: " + rate,
         "BET: " + bet,
         "max bet amount: " + this.maxBetAmount(),
         " current eos: ",
-        currentEOS
+        this.currentEOS
       );
 
-      if (bet < minBet) {
-        bet = minBet;
-      }
-      if (bet > currentEOS && currentEOS > minBet) {
-        bet = currentEOS;
-      }
-      if (bet > this.maxBetAmount() && this.maxBetAmount() > minBet) {
-        bet = this.maxBetAmount();
+      if (bet < this.minBet) {
+        bet = this.minBet;
       }
 
       console.log("Bet: ", bet);
       this.bet = Number(bet).toFixed(4);
+    },
+
+    // triggered by unfocus event of input bet field
+    validBet() {
+      this.bet = this.bet < this.minBet ? this.minBet : this.bet;
     },
 
     floor(value, decimals) {
@@ -275,7 +272,31 @@ export default {
   watch: {
     account() {
       console.log("Hi from {account} property watcher");
-      this.getBalance();
+      // if the player is logged in, set max bet:
+      (async () => {
+        await this.getBalance();
+        if (this.currentEOS < this.minBet) {
+          this.bet = this.minBet;
+          this.maxFlag = false;
+        } else {
+          this.setBet();
+          this.maxFlag = true;
+        }
+      })();
+    },
+    bet: function() {
+      // limit bet by currentEOS (if logged in) or maxBetAmount:
+      if (
+        (this.account.name && this.bet > this.currentEOS) ||
+        this.bet > this.maxBetAmount()
+      ) {
+        this.setBet();
+      }
+    },
+    rollUnder: function() {
+      if (this.maxFlag) {
+        this.setBet();
+      }
     }
   }
 };
