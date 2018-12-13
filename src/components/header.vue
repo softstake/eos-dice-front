@@ -16,9 +16,9 @@
         </div>
         <div class="navbar-menu" :class="{ 'is-active': showNav }">
           <div class="navbar-end">
-            <a href="#" class="navbar-item">Affiliate</a>
-            <a href="#" class="navbar-item">Tokens Airdrop</a>
-            <a href="#" class="navbar-item">How to play</a>
+            <a @click="showAffiliateModal" href="JavaScript:;" class="navbar-item">Affiliate</a>
+            <a @click="showAirdropModal" href="JavaScript:;"  class="navbar-item">Tokens Airdrop</a>
+            <a @click="showHelpModal" href="JavaScript:;"  class="navbar-item">How to play</a>
             <span class="navbar-item">
               <a v-if="account.name" @click="logout" class="button is-link">Logout {{account.name}}</a>
               <a v-else @click="login" class="button is-link">Login</a>
@@ -33,6 +33,8 @@
 <script>
 import ScatterJS from "scatterjs-core";
 import { network } from "../network.js";
+import eventHub from "../event.js";
+
 
 const scatter = ScatterJS.scatter;
 
@@ -46,6 +48,22 @@ export default {
       this.login();
   },
   methods: {
+    showAffiliateModal() {
+        eventHub.$emit('SHOW_AFF_EV'); 
+
+    },
+    showScatterModal() {
+        eventHub.$emit('SHOW_SCATTER_EV'); 
+
+    },
+    showHelpModal() {
+        eventHub.$emit('SHOW_HELP_EV'); 
+
+    },
+    showAirdropModal() {
+        eventHub.$emit('SHOW_AIRDROP_EV'); 
+
+    },
     login() {
       console.log("Login from header");
       const requiredFields = {
@@ -83,6 +101,7 @@ export default {
           console.log("Scatter Connecting issue");
           console.log(e.message);
           // Sent event to open Download scatter modal is here
+          eventHub.$emit('SHOW_SCATTER_EV'); 
         });
     },
     logout() {

@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Toast from 'buefy/dist/components/toast'
-import ScatterJS from 'scatterjs-core'
-import ScatterEOS from 'scatterjs-plugin-eosjs2'
+import Modal from 'buefy/dist/components/modal'
 import store from './store'
 
 import 'buefy/dist/buefy.css'
@@ -10,12 +9,10 @@ import 'buefy/dist/buefy.css'
 require('./mystyles.scss')
 
 
-//ScatterJS.plugins( new ScatterEOS() )
-
-//Vue.prototype.$account = undefined
 Vue.prototype.$contractAccount = 'sevenscasino'
 
 Vue.use(Toast)
+Vue.use(Modal)
 
 new Vue({
     store,
