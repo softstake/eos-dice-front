@@ -139,6 +139,7 @@
                 </div>
             </div>
         </div>
+        <vue-snotify></vue-snotify>
     </section>
 </template>
 
@@ -319,10 +320,12 @@
                                         );
                                         console.log("this account: " + account.name);
                                         this.$store.commit("UPDATE_ACCOUNT", account);
+                                        this.$snotify.success('Welcome back!');
                                     })
                                     .catch(e => {
                                         console.log("User rejected select identity");
                                         console.log(e.message);
+                                        this.$snotify.error('User rejected the provision of an Identity');
                                     });
                                 window.ScatterJS = null;
                             })
