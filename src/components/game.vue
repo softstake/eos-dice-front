@@ -97,7 +97,7 @@
                         <label class="label is-small">PAYOUT ON WIN</label>
                         <div class="field has-addons">
                             <div class="control is-expanded">
-                                <input class="input" type="text" v-model="payWin">
+                                <input class="input" type="text" v-model="payWin" readonly>
                             </div>
                         </div>
                     </div>
