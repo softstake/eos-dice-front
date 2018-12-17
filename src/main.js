@@ -10,6 +10,7 @@ require('./mystyles.scss')
 
 Vue.prototype.$contractAccount = 'junglecasino'
 
+
 const options = {
     toast: {
         position: SnotifyPosition.centerTop,
@@ -19,6 +20,7 @@ const options = {
         pauseOnHover: false
     }
 }
+
 
 Vue.use(Toast)
 Vue.use(Modal)
