@@ -13,7 +13,7 @@ require('./mystyles.scss')
 //ScatterJS.plugins( new ScatterEOS() )
 
 //Vue.prototype.$account = undefined
-Vue.prototype.$contractAccount = 'sevenscasino'
+Vue.prototype.$contractAccount = 'junglecasino'
 
 Vue.use(Toast)
 

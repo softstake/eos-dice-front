@@ -58,7 +58,7 @@
             <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
           </div>
           <div class="column has-text-centered">
-            <button v-if="account.name" class="button">ROLL DICE</button>
+            <button v-if="account.name" @click="roll" class="button">ROLL DICE</button>
             <button v-else @click="login" class="button">LOGIN</button>
           </div>
           <div class="column has-text-centered">
@@ -74,10 +74,12 @@
 import vueSlider from "vue-slider-component";
 import { network } from "../network.js";
 import { Api, JsonRpc, JsSignatureProvider } from "eosjs";
+import { sha256 } from "js-sha256";
 import ScatterJS from "scatterjs-core";
 import ScatterEOS from "scatterjs-plugin-eosjs2";
 
-//ScatterJS.plugins(new ScatterEOS());
+ScatterJS.plugins(new ScatterEOS());
+const scatter = ScatterJS.scatter;
 
 const endpoint = network.protocol + "://" + network.host + ":" + network.port;
 const rpc = new JsonRpc(endpoint);
@@ -149,10 +151,13 @@ export default {
         })
         .then(accountBalance => {
           if (accountBalance.rows.length) {
-            this.currentEOS = accountBalance.rows[0].balance.slice(0, -4);
+            this.currentEOS = Number(
+              accountBalance.rows[0].balance.slice(0, -4)
+            );
           }
         });
     },
+
     getPool() {
       Promise.all([
         rpc.get_table_rows({
@@ -163,7 +168,7 @@ export default {
         rpc.get_table_rows({
           code: this.$contractAccount,
           scope: this.$contractAccount,
-          table: "tabenvs"
+          table: "envs"
         })
       ])
         .then(([accountBalance, locked]) => {
@@ -175,6 +180,77 @@ export default {
           console.log(e.message);
         });
     },
+
+    fetchResult(game_id) {
+      console.log("input: ", game_id);
+      rpc
+        .get_table_rows({
+          code: this.$contractAccount,
+          scope: this.$contractAccount,
+          table: "logs",
+          lower_bound: game_id.toString(),
+          upper_bound: (game_id + 1).toString(),
+          limit: 1,
+          json: true
+        })
+        .then(log => {
+          const result = log["rows"][0];
+          console.log(result);
+          if (!result) {
+            console.log("GameID: ", game_id);
+            setTimeout(() => {
+              this.fetchResult(game_id);
+            }, 2000);
+          } else {
+            this.getBalance();
+            console.log("Game succesfull");
+          }
+        });
+    },
+
+    roll() {
+      if (!this.account.name) {
+        this.errors.push("Scatter not initialized");
+        return;
+      }
+
+      const api = scatter.eos(network, Api, { rpc });
+
+      const gameID = this.getGameID();
+      const memo = this.rollUnder + "---" + gameID;
+
+      (async () => {
+        const result = await api.transact(
+          {
+            actions: [
+              {
+                account: "eosio.token",
+                name: "transfer",
+                authorization: [
+                  {
+                    actor: this.account.name,
+                    permission: this.account.authority
+                  }
+                ],
+                data: {
+                  from: this.account.name,
+                  to: this.$contractAccount,
+                  quantity: Number(this.bet).toFixed(4) + " EOS",
+                  memo: memo
+                }
+              }
+            ]
+          },
+          {
+            blocksBehind: 3,
+            expireSeconds: 30
+          }
+        );
+        this.getBalance();
+        this.fetchResult(gameID);
+      })();
+    },
+
     setBet(rate) {
       let maxBet = this.maxBetAmount();
       if (this.account.name && this.currentEOS < maxBet) {
@@ -204,6 +280,19 @@ export default {
       this.bet = this.bet < this.minBet ? this.minBet : this.bet;
     },
 
+    getGameID() {
+      const seed = this.account.name + Date.now() + Math.random() * 99999;
+      const hash = sha256.array(seed);
+      return (
+        hash[0] +
+        hash[2] * hash[4] +
+        hash[6] * hash[8] +
+        hash[10] * hash[12] +
+        hash[14] -
+        hash[16]
+      );
+    },
+
     floor(value, decimals) {
       return Number(Math.floor(value + "e" + decimals) + "e-" + decimals);
     },
@@ -213,7 +302,6 @@ export default {
     },
 
     login() {
-      const scatter = ScatterJS.scatter;
       const requiredFields = {
         accounts: [network]
       };
@@ -290,6 +378,18 @@ export default {
         (this.account.name && this.bet > this.currentEOS) ||
         this.bet > this.maxBetAmount()
       ) {
+        console.log(
+          "Hellooo: ",
+          this.bet,
+          ", EOS: ",
+          this.currentEOS,
+          ", ",
+          this.bet > this.maxBetAmount(),
+          " - ",
+          this.bet > this.currentEOS,
+          this.bet,
+          this.currentEOS
+        );
         this.setBet();
       }
     },
