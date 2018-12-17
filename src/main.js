@@ -2,13 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import Toast from 'buefy/dist/components/toast'
 import Modal from 'buefy/dist/components/modal'
-import Snotify, {SnotifyPosition} from 'vue-snotify';
+import Snotify, { SnotifyPosition } from 'vue-snotify';
 import store from './store'
 
 import 'buefy/dist/buefy.css'
 require('./mystyles.scss')
 
-Vue.prototype.$contractAccount = 'sevenscasino'
+Vue.prototype.$contractAccount = 'junglecasino'
 
 const options = {
     toast: {
@@ -18,7 +18,7 @@ const options = {
         closeOnClick: true,
         pauseOnHover: false
     }
-  }
+}
 
 Vue.use(Toast)
 Vue.use(Modal)
