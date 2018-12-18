@@ -292,7 +292,6 @@ export default {
     },
 
     fetchResult(game_id) {
-      console.log("input: ", game_id);
       rpc
         .get_table_rows({
           code: this.$contractAccount,
@@ -305,15 +304,25 @@ export default {
         })
         .then(log => {
           const result = log["rows"][0];
-          console.log(result);
           if (!result) {
-            console.log("GameID: ", game_id);
             setTimeout(() => {
               this.fetchResult(game_id);
             }, 2000);
           } else {
             this.getBalance();
-            console.log("Game succesfull");
+            if (result["payout"] == "0.0000 EOS") {
+              const msg = `Unfortunately, you bet ${result["amount"]}\n
+                                Roll result ${result["random_roll"]}，lost ${
+                result["amount"]
+              }`;
+              this.$snotify.error(msg);
+            } else {
+              const msg = `Congratulations, you bet ${result["amount"]}\n
+                                  Roll result ${result["random_roll"]}，win ${
+                result["payout"]
+              }`;
+              this.$snotify.success(msg);
+            }
           }
         });
     },
@@ -353,7 +362,7 @@ export default {
           },
           {
             blocksBehind: 3,
-            expireSeconds: 30
+            expireSeconds: 3600
           }
         );
         this.getBalance();
@@ -460,7 +469,7 @@ export default {
     },
 
     payOut() {
-      return 98 / this.winChance;
+      return (98 / this.winChance).toFixed(4);
     },
 
     payWin() {

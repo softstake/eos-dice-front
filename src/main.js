@@ -8,19 +8,17 @@ import store from './store'
 import 'buefy/dist/buefy.css'
 require('./mystyles.scss')
 
-Vue.prototype.$contractAccount = 'junglecasino'
-
+Vue.prototype.$contractAccount = 'casinosevens'
 
 const options = {
     toast: {
         position: SnotifyPosition.centerTop,
-        timeout: 500,
+        timeout: 3000,
         showProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false
     }
 }
-
 
 Vue.use(Toast)
 Vue.use(Modal)
