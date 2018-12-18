@@ -501,18 +501,6 @@ export default {
         (this.account.name && this.bet > this.currentEOS) ||
         this.bet > this.maxBetAmount()
       ) {
-        console.log(
-          "Hellooo: ",
-          this.bet,
-          ", EOS: ",
-          this.currentEOS,
-          ", ",
-          this.bet > this.maxBetAmount(),
-          " - ",
-          this.bet > this.currentEOS,
-          this.bet,
-          this.currentEOS
-        );
         this.setBet();
       }
     },
