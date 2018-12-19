@@ -417,7 +417,7 @@ export default {
     },
 
     maxBetAmount() {
-      return this.floor(this.availableBalance / 5 / (98 / this.winChance), 4);
+      return this.floor(this.availableBalance / (5 * this.payOut - 1), 4);
     },
 
     login() {
@@ -469,11 +469,11 @@ export default {
     },
 
     payOut() {
-      return (98 / this.winChance).toFixed(4);
+      return Math.trunc((98 / this.winChance) * 10000) / 10000;
     },
 
     payWin() {
-      return (this.bet * this.payOut).toFixed(4);
+      return Math.trunc(this.bet * this.payOut * 10000) / 10000;
     },
 
     account() {
