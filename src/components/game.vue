@@ -107,7 +107,13 @@
             <label class="label is-small">BET AMOUNT</label>
             <div class="field has-addons">
               <div class="control is-expanded has-icon-right">
-                <input class="input" type="text" v-model="bet" @blur="validBet">
+                <input
+                  class="input"
+                  type="number"
+                  v-model.trim="bet"
+                  @blur="BetLargerMin"
+                  @input="BetLessMax"
+                >
               </div>
 
               <div class="control">
@@ -125,7 +131,7 @@
             <label class="label is-small">PAYOUT ON WIN</label>
             <div class="field has-addons">
               <div class="control is-expanded">
-                <input class="input" type="text" v-model="payWin" readonly>
+                <input class="input" type="number" v-model="payWin" readonly>
               </div>
             </div>
           </div>
@@ -155,10 +161,22 @@
         </div>
         <div class="columns is-mobile is-vcentered">
           <div class="column has-text-centered">
+            <span
+              :class="{
+              'animateUp': this.showUpAnimation, 
+              'animateDown': this.showDownAnimation
+            }"
+              class="title is-5 eos-animation"
+            >{{ animationText }}</span>
             <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
           </div>
           <div class="column has-text-centered">
-            <button v-if="account.name" @click="roll" class="button">ROLL DICE</button>
+            <button
+              v-if="account.name"
+              @click="roll"
+              :class="{ 'is-loading': this.isLoading  }"
+              class="button"
+            >ROLL DICE</button>
             <button v-else @click="login" class="button">LOGIN</button>
           </div>
           <div class="column has-text-centered">
@@ -210,6 +228,10 @@ export default {
       showScatterModal: false, // SHOW_SCATTER_EV
       showHelpModal: false, // SHOW_HELP_EV
       showAirdropModal: false, // SHOW_AIRDROP_EV
+      isLoading: false,
+      showUpAnimation: false,
+      showDownAnimation: false,
+      animationText: "",
       sliderOptions: {
         data: null,
         eventType: "auto",
@@ -269,7 +291,7 @@ export default {
     },
 
     getPool() {
-      Promise.all([
+      return Promise.all([
         rpc.get_table_rows({
           code: "eosio.token",
           scope: this.$contractAccount,
@@ -309,20 +331,33 @@ export default {
               this.fetchResult(game_id);
             }, 2000);
           } else {
-            this.getBalance();
+            (async () => {
+              await this.getBalance();
+              await this.getPool();
+              this.BetLessMax();
+            })();
+            this.isLoading = false;
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
                                 Roll result ${result["random_roll"]}，lost ${
                 result["amount"]
               }`;
               this.$snotify.error(msg);
+              this.showDownAnimation = true;
+              this.animationText = result["amount"];
             } else {
               const msg = `Congratulations, you bet ${result["amount"]}\n
                                   Roll result ${result["random_roll"]}，win ${
                 result["payout"]
               }`;
               this.$snotify.success(msg);
+              this.showUpAnimation = true;
+              this.animationText = result["payout"];
             }
+            setTimeout(() => {
+              this.showDownAnimation = false;
+              this.showUpAnimation = false;
+            }, 3000);
           }
         });
     },
@@ -332,39 +367,43 @@ export default {
         this.errors.push("Scatter not initialized");
         return;
       }
-
+      this.isLoading = true;
       const api = scatter.eos(network, Api, { rpc });
 
       const gameID = this.getGameID();
       const memo = this.rollUnder + "---" + gameID;
-
       (async () => {
-        const result = await api.transact(
-          {
-            actions: [
-              {
-                account: "eosio.token",
-                name: "transfer",
-                authorization: [
-                  {
-                    actor: this.account.name,
-                    permission: this.account.authority
+        const result = await api
+          .transact(
+            {
+              actions: [
+                {
+                  account: "eosio.token",
+                  name: "transfer",
+                  authorization: [
+                    {
+                      actor: this.account.name,
+                      permission: this.account.authority
+                    }
+                  ],
+                  data: {
+                    from: this.account.name,
+                    to: this.$contractAccount,
+                    quantity: Number(this.bet).toFixed(4) + " EOS",
+                    memo: memo
                   }
-                ],
-                data: {
-                  from: this.account.name,
-                  to: this.$contractAccount,
-                  quantity: Number(this.bet).toFixed(4) + " EOS",
-                  memo: memo
                 }
-              }
-            ]
-          },
-          {
-            blocksBehind: 3,
-            expireSeconds: 3600
-          }
-        );
+              ]
+            },
+            {
+              blocksBehind: 3,
+              expireSeconds: 3600
+            }
+          )
+          .catch(e => {
+            console.log(e);
+            this.isLoading = false;
+          });
         this.getBalance();
         this.fetchResult(gameID);
       })();
@@ -378,24 +417,27 @@ export default {
 
       let bet = rate ? this.bet * rate : maxBet;
 
-      console.log(
-        "RATE: " + rate,
-        "BET: " + bet,
-        "max bet amount: " + this.maxBetAmount(),
-        " current eos: ",
-        this.currentEOS
-      );
-
       if (bet < this.minBet) {
         bet = this.minBet;
+      } else if (bet > maxBet) {
+        bet = maxBet;
       }
 
-      console.log("Bet: ", bet);
       this.bet = Number(bet).toFixed(4);
     },
 
+    BetLessMax() {
+      // triggered by input event of input bet field
+      if (
+        (this.account.name && this.bet > this.currentEOS) ||
+        this.bet > this.maxBetAmount()
+      ) {
+        this.setBet();
+      }
+    },
+
     // triggered by unfocus event of input bet field
-    validBet() {
+    BetLargerMin() {
       this.bet = this.bet < this.minBet ? this.minBet : this.bet;
     },
 
@@ -495,15 +537,6 @@ export default {
         }
       })();
     },
-    bet: function() {
-      // limit bet by currentEOS (if logged in) or maxBetAmount:
-      if (
-        (this.account.name && this.bet > this.currentEOS) ||
-        this.bet > this.maxBetAmount()
-      ) {
-        this.setBet();
-      }
-    },
     rollUnder: function() {
       if (this.maxFlag) {
         this.setBet();
@@ -512,3 +545,46 @@ export default {
   }
 };
 </script>
+
+<style>
+.eos-animation {
+  opacity: 0;
+  position: absolute;
+}
+.eos-animation.animateUp {
+  -webkit-animation: fadeOutUp 3s;
+  animation: fadeOutUp 3s;
+  color: #02f292;
+  text-shadow: 0 0 5px #02f292;
+}
+.eos-animation.animateDown {
+  -webkit-animation: fadeOutDown 1s;
+  animation: fadeOutDown 1s;
+  color: #cd4263;
+  text-shadow: 0 0 5px #cd4263;
+}
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+  }
+}
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translate(0, 100%);
+    transform: translate(0, 100%);
+  }
+}
+</style>
