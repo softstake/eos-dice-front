@@ -442,16 +442,7 @@ export default {
     },
 
     getGameID() {
-      const seed = this.account.name + Date.now() + Math.random() * 99999;
-      const hash = sha256.array(seed);
-      return (
-        hash[0] +
-        hash[2] * hash[4] +
-        hash[6] * hash[8] +
-        hash[10] * hash[12] +
-        hash[14] -
-        hash[16]
-      );
+      return Number(window.crypto.getRandomValues(new Uint16Array(3)).join(""));
     },
 
     floor(value, decimals) {
