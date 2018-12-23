@@ -111,8 +111,8 @@
                   class="input"
                   type="number"
                   v-model.trim="bet"
-                  @blur="BetLargerMin"
-                  @input="BetLessMax"
+                  @blur="betLargerMin"
+                  @input="betLessMax"
                 >
               </div>
 
@@ -204,6 +204,9 @@ const scatter = ScatterJS.scatter;
 const endpoint = network.protocol + "://" + network.host + ":" + network.port;
 const rpc = new JsonRpc(endpoint);
 
+const url = new URL(location.href);
+const ref = url.searchParams.get("ref");
+
 export default {
   components: {
     vueSlider
@@ -215,6 +218,7 @@ export default {
     eventHub.$on("SHOW_AIRDROP_EV", () => (this.showAirdropModal = true));
     this.getBalance();
     this.getPool();
+    //this.getRef(ref);
   },
   data() {
     return {
@@ -224,6 +228,7 @@ export default {
       maxFlag: false,
       currentEOS: 0,
       availableBalance: 0,
+      ref: "",
       showAffiliateModal: false, // SHOW_AFF_EV
       showScatterModal: false, // SHOW_SCATTER_EV
       showHelpModal: false, // SHOW_HELP_EV
@@ -275,6 +280,7 @@ export default {
       if (!this.account.name) {
         this.currentEOS = 0;
       }
+
       return rpc
         .get_table_rows({
           code: "eosio.token",
@@ -313,12 +319,33 @@ export default {
         });
     },
 
+    getRef(name) {
+      return rpc
+        .get_account(name)
+        .then(res => {
+          let ref = res["account_name"];
+          if (
+            this.account.name &&
+            ref != this.account.name &&
+            ref != this.$contractAccount
+          ) {
+            this.ref = ref;
+          } else {
+            this.ref = "";
+          }
+        })
+        .catch(e => {
+          console.log("Referrer account name doesn't exist");
+          this.ref = "";
+        });
+    },
+
     fetchResult(game_id) {
       rpc
         .get_table_rows({
           code: this.$contractAccount,
           scope: this.$contractAccount,
-          table: "logs",
+          table: "results",
           lower_bound: game_id.toString(),
           upper_bound: (game_id + 1).toString(),
           limit: 1,
@@ -334,7 +361,7 @@ export default {
             (async () => {
               await this.getBalance();
               await this.getPool();
-              this.BetLessMax();
+              this.betLessMax();
             })();
             this.isLoading = false;
             if (result["payout"] == "0.0000 EOS") {
@@ -371,7 +398,7 @@ export default {
       const api = scatter.eos(network, Api, { rpc });
 
       const gameID = this.getGameID();
-      const memo = this.rollUnder + "---" + gameID;
+      const memo = this.rollUnder + "-" + this.ref + "--" + gameID;
       (async () => {
         const result = await api
           .transact(
@@ -426,7 +453,7 @@ export default {
       this.bet = Number(bet).toFixed(4);
     },
 
-    BetLessMax() {
+    betLessMax() {
       // triggered by input event of input bet field
       if (
         (this.account.name && this.bet > this.currentEOS) ||
@@ -437,7 +464,7 @@ export default {
     },
 
     // triggered by unfocus event of input bet field
-    BetLargerMin() {
+    betLargerMin() {
       this.bet = this.bet < this.minBet ? this.minBet : this.bet;
     },
 
@@ -502,7 +529,11 @@ export default {
     },
 
     payOut() {
-      return Math.trunc((98 / this.winChance) * 10000) / 10000;
+      let house_fee = 2;
+      if (this.ref) {
+        house_fee -= 0.5;
+      }
+      return Math.trunc(((100 - house_fee) / this.winChance) * 10000) / 10000;
     },
 
     payWin() {
@@ -519,6 +550,7 @@ export default {
       // if the player is logged in, set max bet:
       (async () => {
         await this.getBalance();
+        await this.getRef(ref);
         if (this.currentEOS < this.minBet) {
           this.bet = this.minBet;
           this.maxFlag = false;

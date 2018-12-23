@@ -33,6 +33,11 @@
           </tr>
         </tbody>
       </table>
+      <section v-if="errored">
+        <p
+          align="center"
+        >We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+      </section>
     </div>
   </section>
 </template>
@@ -44,7 +49,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      orders: []
+      orders: [],
+      errored: false
     };
   },
   mounted() {
@@ -60,6 +66,7 @@ export default {
       })
       .catch(e => {
         console.log(e);
+        this.errored = true;
       });
   }
 };
