@@ -51,8 +51,7 @@ export default {
     return {
       orders: [],
       myBets: false,
-      errored: false,
-      api: ""
+      errored: false
     };
   },
   methods: {

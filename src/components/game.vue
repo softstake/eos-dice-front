@@ -278,6 +278,7 @@ export default {
     getBalance() {
       if (!this.account.name) {
         this.currentEOS = 0;
+        return;
       }
 
       return rpc
@@ -319,22 +320,25 @@ export default {
     },
 
     getRef(name) {
+      if (!name || !this.account.name) {
+        this.ref = "";
+        return;
+      }
+
       return rpc
         .get_account(name)
         .then(res => {
           let ref = res["account_name"];
-          if (
-            this.account.name &&
-            ref != this.account.name &&
-            ref != this.$contractAccount
-          ) {
+          if (ref != this.account.name && ref != this.$contractAccount) {
             this.ref = ref;
           } else {
             this.ref = "";
           }
         })
         .catch(e => {
-          console.log("Referrer account name doesn't exist");
+          const err = "Referrer account name doesn't exist";
+          this.$snotify.error(err);
+          console.log(err);
           this.ref = "";
         });
     },
@@ -428,6 +432,7 @@ export default {
             }
           )
           .catch(e => {
+            this.$snotify.error(e.message);
             console.log(e);
             this.isLoading = false;
           });
