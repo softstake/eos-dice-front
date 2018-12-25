@@ -3,11 +3,11 @@
     <div class="container" id="results">
       <div class="tabs is-toggle is-small">
         <ul>
-          <li class="is-active">
-            <a>All Bets</a>
+          <li :class="{ 'is-active': !myBets }">
+            <a @click="myBets = false">All Bets</a>
           </li>
-          <li>
-            <a>My Bets</a>
+          <li :class="{ 'is-active': myBets }">
+            <a @click="myBets = true">My Bets</a>
           </li>
         </ul>
       </div>
@@ -23,8 +23,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="o in orders">
-            <td class="has-text-centered">21:43:34</td>
+          <tr v-for="o in orders" v-bind:class="{ 'is-selected': o.PlayerPayout != 0 }">
+            <td class="has-text-centered">{{ dateFormat(o.CreatedAt) }}</td>
             <td class="has-text-centered">{{ o.PlayerName }}</td>
             <td class="has-text-centered">{{ o.RollUnder }}</td>
             <td class="has-text-centered">{{ o.BetAmount }}</td>
@@ -50,24 +50,52 @@ export default {
   data() {
     return {
       orders: [],
-      errored: false
+      myBets: false,
+      errored: false,
+      api: ""
     };
   },
+  methods: {
+    fetchOrders() {
+      if (this.myBets && !this.account.name) {
+        this.orders = [];
+        return;
+      }
+
+      axios
+        .get(
+          (this.myBets && apiUrl + `?player=${this.account.name}`) || apiUrl,
+          {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        )
+        .then(response => {
+          this.orders = response.data;
+          this.errored = false;
+        })
+        .catch(e => {
+          console.log(e);
+          this.errored = true;
+        });
+    },
+    dateFormat(raw) {
+      return new Date(raw).toLocaleTimeString();
+    }
+  },
+  computed: {
+    account() {
+      return this.$store.state.account;
+    }
+  },
   mounted() {
-    axios
-      .get(apiUrl, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => {
-        this.orders = response.data;
-        console.log(this.orders);
-      })
-      .catch(e => {
-        console.log(e);
-        this.errored = true;
-      });
+    setInterval(this.fetchOrders, 1000);
+  },
+  watch: {
+    myBets: function() {
+      this.fetchOrders();
+    }
   }
 };
 </script>

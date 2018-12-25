@@ -218,7 +218,6 @@ export default {
     eventHub.$on("SHOW_AIRDROP_EV", () => (this.showAirdropModal = true));
     this.getBalance();
     this.getPool();
-    //this.getRef(ref);
   },
   data() {
     return {
@@ -363,7 +362,6 @@ export default {
               await this.getPool();
               this.betLessMax();
             })();
-            this.isLoading = false;
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
                                 Roll result ${result["random_roll"]}，lost ${
@@ -385,6 +383,7 @@ export default {
               this.showDownAnimation = false;
               this.showUpAnimation = false;
             }, 3000);
+            this.isLoading = false;
           }
         });
     },
@@ -394,6 +393,7 @@ export default {
         this.errors.push("Scatter not initialized");
         return;
       }
+
       this.isLoading = true;
       const api = scatter.eos(network, Api, { rpc });
 
