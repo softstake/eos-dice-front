@@ -11,7 +11,7 @@
           </li>
         </ul>
       </div>
-      <table class="table is-fullwidth">
+      <table class="table is-fullwidth is-striped">
         <thead>
           <tr>
             <th class="has-text-centered">Time</th>
@@ -26,10 +26,10 @@
           <tr v-for="o in orders" v-bind:class="{ 'is-selected': o.PlayerPayout != 0 }">
             <td class="has-text-centered">{{ dateFormat(o.CreatedAt) }}</td>
             <td class="has-text-centered">{{ o.PlayerName }}</td>
-            <td class="has-text-centered">{{ o.RollUnder }}</td>
-            <td class="has-text-centered">{{ o.BetAmount }}</td>
-            <td class="has-text-centered">{{ o.RandomRoll }}</td>
-            <td class="has-text-centered">{{ o.PlayerPayout }}</td>
+            <td class="has-text-centered is-hidden-mobile" >{{ o.RollUnder }}</td>
+            <td class="has-text-centered is-hidden-mobile">{{ o.BetAmount }}</td>
+            <td class="has-text-centered is-hidden-mobile">{{ o.RandomRoll }}</td>
+            <td class="has-text-centered is-hidden-mobile">{{ o.PlayerPayout }}</td>
           </tr>
         </tbody>
       </table>
