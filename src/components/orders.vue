@@ -17,7 +17,7 @@
             <th class="has-text-centered">Time</th>
             <th class="has-text-centered">Bettor</th>
             <th class="has-text-centered is-hidden-mobile">Roll Under</th>
-            <th class="has-text-centered">Bet Amount</th>
+            <th class="has-text-centered">Bet</th>
             <th class="has-text-centered is-hidden-mobile">Roll</th>
             <th class="has-text-centered">Payout</th>
           </tr>
