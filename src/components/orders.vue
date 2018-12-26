@@ -15,10 +15,10 @@
         <thead>
           <tr>
             <th class="has-text-centered">Time</th>
-            <th class="has-text-centered">Better</th>
-            <th class="has-text-centered">Roll Under</th>
-            <th class="has-text-centered">Bet</th>
-            <th class="has-text-centered">Roll</th>
+            <th class="has-text-centered">Bettor</th>
+            <th class="has-text-centered is-hidden-mobile">Roll Under</th>
+            <th class="has-text-centered">Bet Amount</th>
+            <th class="has-text-centered is-hidden-mobile">Roll</th>
             <th class="has-text-centered">Payout</th>
           </tr>
         </thead>
@@ -27,9 +27,9 @@
             <td class="has-text-centered">{{ dateFormat(o.CreatedAt) }}</td>
             <td class="has-text-centered">{{ o.PlayerName }}</td>
             <td class="has-text-centered is-hidden-mobile" >{{ o.RollUnder }}</td>
-            <td class="has-text-centered is-hidden-mobile">{{ o.BetAmount }}</td>
+            <td class="has-text-centered">{{ o.BetAmount }}</td>
             <td class="has-text-centered is-hidden-mobile">{{ o.RandomRoll }}</td>
-            <td class="has-text-centered is-hidden-mobile">{{ o.PlayerPayout }}</td>
+            <td class="has-text-centered">{{ o.PlayerPayout }}</td>
           </tr>
         </tbody>
       </table>
