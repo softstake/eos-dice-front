@@ -89,7 +89,7 @@ export default {
     }
   },
   mounted() {
-    setInterval(this.fetchOrders, 1000);
+    setInterval(this.fetchOrders, 2000);
   },
   watch: {
     myBets: function() {
