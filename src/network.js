@@ -1,12 +1,12 @@
 const url = new URL(location.href)
-const isTest = url.searchParams.get('test')
+const isMainNet = url.hostname.startsWith('eos777.io')
 
 export const network = {
     blockchain: 'eos',
     protocol: 'https',
-    host: isTest ? 'jungle2.cryptolions.io' : 'api.eosnewyork.io',
+    host: isMainNet ? 'api.eosnewyork.io' : 'jungle2.cryptolions.io',
     port: 443,
-    chainId: isTest ? 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473' : 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+    chainId: isMainNet ? 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' : 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
 }
 
-export const apiUrl = isTest ? 'https://eos777.io/test/bets' : 'https://eos777.io/api/bets'
+export const apiUrl = isMainNet ? 'https://eos777.io/api/bets' :  url.protocol + '/' + url.hostname + '/api/bets'
