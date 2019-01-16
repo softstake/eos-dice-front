@@ -438,7 +438,7 @@ export default {
     },
 
     setBet(rate) {
-      (async () => {
+      return (async () => {
         await this.getBalance();
         await this.getPool();
         let maxBet = this.maxBetAmount();
@@ -460,8 +460,7 @@ export default {
 
     betLessMax() {
       // triggered by input event of input bet field
-      console.log("call betLessMax");
-      (async () => {
+      return (async () => {
         await this.getBalance();
         await this.getPool();
         if (
