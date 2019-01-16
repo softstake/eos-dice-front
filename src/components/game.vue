@@ -469,7 +469,7 @@ export default {
           (this.account.name && this.bet > this.currentEOS) ||
           this.bet > this.maxBetAmount()
         ) {
-          this.setBet();
+          await this.setBet();
         }
       })();
     },
