@@ -360,8 +360,6 @@ export default {
               this.fetchResult(game_id);
             }, 2000);
           } else {
-            this.betLessMax();
-            this.betLargerMin();
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
                                 Roll result ${result["random_roll"]}，lost ${
@@ -383,7 +381,11 @@ export default {
               this.showDownAnimation = false;
               this.showUpAnimation = false;
             }, 3000);
-            this.isLoading = false;
+            this.betLargerMin();
+            (async () => {
+              await this.betLessMax();
+              this.isLoading = false;
+            })();
           }
         });
     },
