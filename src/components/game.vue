@@ -217,7 +217,6 @@ export default {
     eventHub.$on("SHOW_HELP_EV", () => (this.showHelpModal = true));
     eventHub.$on("SHOW_AIRDROP_EV", () => (this.showAirdropModal = true));
     this.getBalance();
-    this.getPool();
   },
   data() {
     return {
@@ -361,11 +360,8 @@ export default {
               this.fetchResult(game_id);
             }, 2000);
           } else {
-            (async () => {
-              await this.getBalance();
-              await this.getPool();
-              this.betLessMax();
-            })();
+            this.betLessMax();
+            this.betLargerMin();
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
                                 Roll result ${result["random_roll"]}，lost ${
@@ -442,30 +438,38 @@ export default {
     },
 
     setBet(rate) {
-      let maxBet = this.maxBetAmount();
-      if (this.account.name && this.currentEOS < maxBet) {
-        maxBet = this.currentEOS;
-      }
+      return (async () => {
+        await this.getBalance();
+        await this.getPool();
+        let maxBet = this.maxBetAmount();
+        if (this.account.name && this.currentEOS < maxBet) {
+          maxBet = this.currentEOS;
+        }
 
-      let bet = rate ? this.bet * rate : maxBet;
+        let bet = rate ? this.bet * rate : maxBet;
 
-      if (bet < this.minBet) {
-        bet = this.minBet;
-      } else if (bet > maxBet) {
-        bet = maxBet;
-      }
+        if (bet < this.minBet) {
+          bet = this.minBet;
+        } else if (bet > maxBet) {
+          bet = maxBet;
+        }
 
-      this.bet = Number(bet).toFixed(4);
+        this.bet = Number(bet).toFixed(4);
+      })();
     },
 
     betLessMax() {
       // triggered by input event of input bet field
-      if (
-        (this.account.name && this.bet > this.currentEOS) ||
-        this.bet > this.maxBetAmount()
-      ) {
-        this.setBet();
-      }
+      return (async () => {
+        await this.getBalance();
+        await this.getPool();
+        if (
+          (this.account.name && this.bet > this.currentEOS) ||
+          this.bet > this.maxBetAmount()
+        ) {
+          this.setBet();
+        }
+      })();
     },
 
     // triggered by unfocus event of input bet field
