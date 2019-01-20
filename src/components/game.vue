@@ -117,13 +117,13 @@
               </div>
 
               <div class="control">
-                <button class="button" @click="setBet(0.5); maxFlag=false;">1/2</button>
+                <button class="button" @click="setBet(0.5); maxFlag=false;" id="halfBetBtn">1/2</button>
               </div>
               <div class="control">
-                <button class="button" @click="setBet(2); maxFlag=false;">2X</button>
+                <button class="button" @click="setBet(2); maxFlag=false;" id="twiceBetBtn">2X</button>
               </div>
               <div class="control">
-                <button class="button" @click="setBet(); maxFlag=true;">MAX</button>
+                <button class="button" @click="setBet(); maxFlag=true;" id="maxBetBtn">MAX</button>
               </div>
             </div>
           </div>
@@ -175,9 +175,9 @@
               v-if="account.name"
               @click="roll"
               :class="{ 'is-loading': this.isLoading  }"
-              class="button"
+              class="button" id="rollBtn"
             >ROLL DICE</button>
-            <button v-else @click="login" class="button">LOGIN</button>
+            <button v-else @click="login" class="button" id="loginBtn">LOGIN</button>
           </div>
           <div class="column has-text-centered">
             <span class="title is-5"></span>
@@ -358,7 +358,7 @@ export default {
           if (!result) {
             setTimeout(() => {
               this.fetchResult(game_id);
-            }, 2000);
+            }, 1000);
           } else {
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
