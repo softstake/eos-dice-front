@@ -175,12 +175,13 @@
               v-if="account.name"
               @click="roll"
               :class="{ 'is-loading': this.isLoading  }"
-              class="button" id="rollBtn"
+              class="button"
+              id="rollBtn"
             >ROLL DICE</button>
             <button v-else @click="login" class="button" id="loginBtn">LOGIN</button>
           </div>
           <div class="column has-text-centered">
-            <span class="title is-5"></span>
+            <span class="title is-5">{{Number(currentSVNS).toFixed(4)}} SEVENS</span>
           </div>
         </div>
       </div>
@@ -216,7 +217,7 @@ export default {
     eventHub.$on("SHOW_SCATTER_EV", () => (this.showScatterModal = true));
     eventHub.$on("SHOW_HELP_EV", () => (this.showHelpModal = true));
     eventHub.$on("SHOW_AIRDROP_EV", () => (this.showAirdropModal = true));
-    this.getBalance();
+    this.getBalanceEOS();
   },
   data() {
     return {
@@ -225,6 +226,7 @@ export default {
       minBet: 0.1,
       maxFlag: false,
       currentEOS: 0,
+      currentSVNS: 0,
       availableBalance: 0,
       ref: "",
       showAffiliateModal: false, // SHOW_AFF_EV
@@ -274,7 +276,7 @@ export default {
     };
   },
   methods: {
-    getBalance() {
+    getBalanceEOS() {
       if (!this.account.name) {
         this.currentEOS = 0;
         return;
@@ -289,6 +291,27 @@ export default {
         .then(accountBalance => {
           if (accountBalance.rows.length) {
             this.currentEOS = Number(
+              accountBalance.rows[0].balance.slice(0, -4)
+            );
+          }
+        });
+    },
+
+    getBalanceSVNS() {
+      if (!this.account.name) {
+        this.currentSVNS = 0;
+        return;
+      }
+
+      return rpc
+        .get_table_rows({
+          code: "sevenstokens",
+          scope: this.account.name,
+          table: "accounts"
+        })
+        .then(accountBalance => {
+          if (accountBalance.rows.length) {
+            this.currentSVNS = Number(
               accountBalance.rows[0].balance.slice(0, -4)
             );
           }
@@ -360,6 +383,7 @@ export default {
               this.fetchResult(game_id);
             }, 1000);
           } else {
+            this.getBalanceSVNS();
             if (result["payout"] == "0.0000 EOS") {
               const msg = `Unfortunately, you bet ${result["amount"]}\n
                                 Roll result ${result["random_roll"]}，lost ${
@@ -434,14 +458,14 @@ export default {
             console.log(e);
             this.isLoading = false;
           });
-        this.getBalance();
+        this.getBalanceEOS();
         this.fetchResult(gameID);
       })();
     },
 
     setBet(rate) {
       return (async () => {
-        await this.getBalance();
+        await this.getBalanceEOS();
         await this.getPool();
         let maxBet = this.maxBetAmount();
         if (this.account.name && this.currentEOS < maxBet) {
@@ -463,7 +487,7 @@ export default {
     betLessMax() {
       // triggered by input event of input bet field
       return (async () => {
-        await this.getBalance();
+        await this.getBalanceEOS();
         await this.getPool();
         if (
           (this.account.name && this.bet > this.currentEOS) ||
@@ -558,9 +582,10 @@ export default {
   watch: {
     account() {
       console.log("Hi from {account} property watcher");
+      this.getBalanceSVNS();
       // if the player is logged in, set max bet:
       (async () => {
-        await this.getBalance();
+        await this.getBalanceEOS();
         await this.getRef(ref);
         if (this.currentEOS < this.minBet) {
           this.bet = this.minBet;
