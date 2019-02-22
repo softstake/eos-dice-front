@@ -1,7 +1,8 @@
 <template>
-  <section class="section">
-    <div class="container" id="results">
-      <div class="tabs is-toggle is-small">
+  <!-- Start Bets list -->
+  <section class="bets_list">
+    <div class="container">
+      <div class="tabs is-centered">
         <ul>
           <li :class="{ 'is-active': !myBets }">
             <a @click="myBets = false">All Bets</a>
@@ -11,25 +12,28 @@
           </li>
         </ul>
       </div>
-      <table class="table is-fullwidth is-striped">
+      <table class="table is-fullwidth">
         <thead>
-          <tr>
-            <th class="has-text-centered">Time</th>
-            <th class="has-text-centered">Bettor</th>
-            <th class="has-text-centered is-hidden-mobile">Roll Under</th>
-            <th class="has-text-centered">Bet</th>
-            <th class="has-text-centered is-hidden-mobile">Roll</th>
-            <th class="has-text-centered">Payout</th>
+          <tr class="is-uppercase">
+            <th>Time</th>
+            <th>Bettor</th>
+            <th class="is-hidden-mobile">Roll Under</th>
+            <th>Bet</th>
+            <th class="is-hidden-mobile">Roll</th>
+            <th>Payout</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="o in orders" v-bind:class="{ 'is-selected': o.PlayerPayout != 0 }">
-            <td class="has-text-centered">{{ dateFormat(o.CreatedAt) }}</td>
-            <td class="has-text-centered">{{ o.PlayerName }}</td>
-            <td class="has-text-centered is-hidden-mobile" >{{ o.RollUnder }}</td>
-            <td class="has-text-centered">{{ o.BetAmount }}</td>
-            <td class="has-text-centered is-hidden-mobile">{{ o.RandomRoll }}</td>
-            <td class="has-text-centered">{{ o.PlayerPayout }}</td>
+          <tr
+            v-for="o in orders"
+            :class="[ o.RandomRoll < o.RollUnder ? 'green-row' : 'blue-row' ]"
+          >
+            <td>{{ dateFormat(o.CreatedAt) }}</td>
+            <td>{{ o.PlayerName }}</td>
+            <td class="is-hidden-mobile">{{ o.RollUnder }}</td>
+            <td>{{ o.BetAmount }}</td>
+            <td class="is-hidden-mobile">{{ o.RandomRoll }}</td>
+            <td :class="{ 'has-text-primary' : o.PlayerPayout != 0 }">{{ o.PlayerPayout }}</td>
           </tr>
         </tbody>
       </table>
@@ -40,6 +44,7 @@
       </section>
     </div>
   </section>
+  <!-- End of Bets list -->
 </template>
 
 <script>

@@ -1,17 +1,39 @@
 <template>
-  <section class="section">
+  <div>
+    <!-- Start Modals -->
     <b-modal :active.sync="showAffiliateModal" has-modal-card>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title is-centered">Get Rewarded With Referrals!</p>
-          <button class="delete" aria-label="close" @click="showAffiliateModal = false"></button>
+          <a class="icon has-text-primary modal-close-btn" @click="showAffiliateModal = false">
+            <i class="fas fa-times"></i>
+          </a>
         </header>
         <section class="modal-card-body">
           <p>
-            Refer a friend and receive 0.5% of their bets! Additionally, the receiver of the referral will
-            get a 0.5% bonus towards their wins. There's no reason not to get referred and receive bigger
-            wins for each bet placed, so join our Telegram chat and hunt for a link.
+            Make sure you have an EOS account. For more information on how to create one,
+            <a
+              class="has-text-primary"
+            >click here.</a>
           </p>
+          <p>
+            If you haven’t already, download and install Scatter, an EOS wallet that facilitates interaction between
+            users and dApps.
+          </p>
+          <p>
+            Set your BET AMOUNT. This is the amount of EOS you will be wagering.
+            Adjust the slider to change your chance of winning.
+            Click ROLL DICE to place your bet.
+          </p>
+          <p>
+            If your number is lower than your ROLL UNDER TO WIN number, you win!
+            If you get a notice that your transaction failed, please check that you have enough CPU & bandwidth to make
+            the transaction! Please use EOSToolkit to make any changes to your account!
+            You can view your EOS balance next to the ROLL DICE button. The table below the slider bar shows recent bets
+            from all players across the world.
+          </p>
+          <p>Still have questions? Reach out to us at Discord and we’ll be happy to help!</p>
+          <button class="button is-primary">DOWNLOAD</button>
         </section>
       </div>
     </b-modal>
@@ -19,8 +41,10 @@
     <b-modal :active.sync="showScatterModal" has-modal-card>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Run Scatter</p>
-          <button class="delete" aria-label="close" @click="showScatterModal = false"></button>
+          <p class="modal-card-title is-centered">Run Scatter</p>
+          <a class="icon has-text-primary modal-close-btn" @click="showScatterModal = false">
+            <i class="fas fa-times"></i>
+          </a>
         </header>
         <section class="modal-card-body">
           <p class="is-centered">Please download Scatter if it is not installed</p>
@@ -32,8 +56,10 @@
     <b-modal :active.sync="showHelpModal" has-modal-card>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">How to play</p>
-          <button class="delete" aria-label="close" @click="showHelpModal = false"></button>
+          <p class="modal-card-title is-centered">How to play</p>
+          <a class="icon has-text-primary modal-close-btn" @click="showHelpModal = false">
+            <i class="fas fa-times"></i>
+          </a>
         </header>
         <section class="modal-card-body">
           <ol>
@@ -85,7 +111,9 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title is-centered">7.7 Million SEVENS Token Giveaway!</p>
-          <button class="delete" aria-label="close" @click="showAirdropModal = false"></button>
+          <a class="icon has-text-primary modal-close-btn" @click="showAirdropModal = false">
+            <i class="fas fa-times"></i>
+          </a>
         </header>
         <section class="modal-card-body">
           <p class="is-centered">
@@ -99,95 +127,136 @@
         </section>
       </div>
     </b-modal>
-
-    <div class="container">
-      <div class="box">
+    <!-- End of Modals -->
+    <!-- Start Betbox -->
+    <section class="bet-section">
+      <div class="container betbox">
+        <figure class="image bet_logo">
+          <img src="../images/icon.png">
+        </figure>
         <div class="columns">
-          <div class="column is-two-thirds">
-            <label class="label is-small">BET AMOUNT</label>
+          <div class="column is-three-fifths has-text-white">
+            <label class="label has-text-white">BET AMOUNT</label>
             <div class="field has-addons">
-              <div class="control is-expanded has-icon-right">
+              <div class="control has-icons-left width100">
                 <input
-                  class="input"
+                  class="input is-medium"
                   type="number"
+                  placeholder="Bet Amount"
                   v-model.trim="bet"
                   @blur="betLargerMin"
                   @input="betLessMax"
                 >
-              </div>
-
-              <div class="control">
-                <button class="button" @click="setBet(0.5); maxFlag=false;" id="halfBetBtn">1/2</button>
-              </div>
-              <div class="control">
-                <button class="button" @click="setBet(2); maxFlag=false;" id="twiceBetBtn">2X</button>
+                <span class="icon is-left">
+                  <figure class="image eos-icon">
+                    <img src="../images/eos-icon.png">
+                  </figure>
+                </span>
               </div>
               <div class="control">
-                <button class="button" @click="setBet(); maxFlag=true;" id="maxBetBtn">MAX</button>
+                <a class="button is-medium" @click="setBet(0.5); maxFlag=false;" id="halfBetBtn">
+                  <span>&#189;</span>
+                </a>
+              </div>
+              <div class="control">
+                <a class="button is-medium" @click="setBet(2); maxFlag=false;" id="twiceBetBtn">x2</a>
+              </div>
+              <div class="control">
+                <a class="button is-medium" @click="setBet(); maxFlag=true;" id="maxBetBtn">MAX</a>
               </div>
             </div>
           </div>
+          <div class="column has-text-white">
+            <label class="label has-text-white">PAYOUT ON WIN</label>
+            <div class="field">
+              <div class="control is-expanded has-icons-left">
+                <input class="input is-medium" type="number" v-model="payWin" readonly>
+                <span class="icon is-left">
+                  <figure class="image eos-icon">
+                    <img src="../images/eos-icon.png">
+                  </figure>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns is-mobile">
           <div class="column">
-            <label class="label is-small">PAYOUT ON WIN</label>
-            <div class="field has-addons">
-              <div class="control is-expanded">
-                <input class="input" type="number" v-model="payWin" readonly>
+            <div class="range-slide">
+              <div class="columns has-text-centered is-mobile">
+                <div class="column">
+                  <span class="is-size-7 is-block">ROLLUNDER TO WIN</span>
+                  <span class="is-size-4">
+                    {{rollUnder}}
+                    <i class="fas fa-arrow-down"></i>
+                  </span>
+                </div>
+                <div class="column payout">
+                  <span class="is-size-7 is-block">PAYOUT</span>
+                  <span class="is-size-4">x{{Number(payOut).toFixed(2)}}</span>
+                </div>
+                <div class="column">
+                  <span class="is-size-7 is-block">WIN CHANCE</span>
+                  <span class="is-size-4">{{winChance}}%</span>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="box">
-          <div class="columns is-mobile">
-            <div class="column has-text-centered">
-              <label class="label is-small">ROLL UNDER TO WIN</label>
-              <h3 class="title is-3">{{rollUnder}}↓</h3>
-            </div>
-            <div class="column has-text-centered">
-              <label class="label is-small">PAYOUT</label>
-              <h3 class="title is-3">{{Number(payOut).toFixed(2)}}x</h3>
-            </div>
-            <div class="column has-text-centered">
-              <label class="label is-small">WIN CHANCE</label>
-              <h3 class="title is-3">{{winChance}}%</h3>
-            </div>
-          </div>
-        </div>
-        <div class="columns">
-          <div class="column has-text-centered">
-            <div class="field is-expanded">
-              <vue-slider ref="slider" v-model="rollUnder" v-bind="sliderOptions"></vue-slider>
+              <div class="columns has-text-centered">
+                <div class="column">
+                  <vue-slider
+                    id="slider-handle"
+                    ref="slider"
+                    v-model="rollUnder"
+                    v-bind="sliderOptions"
+                  ></vue-slider>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="columns is-mobile is-vcentered">
-          <div class="column has-text-centered">
+          <div class="column has-text-centered has-text-white">
+            <span class="icon">
+              <figure class="image eos-icon">
+                <img src="../images/eos-icon.png">
+              </figure>
+            </span>
             <span
               :class="{
               'animateUp': this.showUpAnimation, 
               'animateDown': this.showDownAnimation
             }"
-              class="title is-5 eos-animation"
+              class="is-block is-size-5 eos-animation"
             >{{ animationText }}</span>
-            <span class="title is-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
+            <span class="is-block is-size-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
           </div>
-          <div class="column has-text-centered">
-            <button
+          <div class="column">
+            <a
+              class="button is-primary is-fullwidth is-medium get_started_btn"
               v-if="account.name"
               @click="roll"
               :class="{ 'is-loading': this.isLoading  }"
-              class="button"
               id="rollBtn"
-            >ROLL DICE</button>
-            <button v-else @click="login" class="button" id="loginBtn">LOGIN</button>
+            >ROLL DICE</a>
+            <a
+              class="button is-primary is-fullwidth is-medium get_started_btn"
+              v-else
+              @click="login"
+              id="loginBtn"
+            >GET STARTED</a>
           </div>
-          <div class="column has-text-centered">
-            <span class="title is-5">{{Number(currentSVNS).toFixed(4)}} SEVENS</span>
+          <div class="column has-text-centered has-text-white">
+            <span class="icon">
+              <figure class="image is-16x16">
+                <img src="../images/token.png">
+              </figure>
+            </span>
+            <span class="is-block is-size-5">{{Number(currentSVNS).toFixed(4)}} SEVENS</span>
           </div>
         </div>
       </div>
-    </div>
-    <vue-snotify></vue-snotify>
-  </section>
+    </section>
+    <!-- End of Betbox -->
+  </div>
 </template>
 
 <script>
@@ -264,12 +333,22 @@ export default {
         realTime: false,
         lazy: false,
         formatter: null,
-        bgStyle: null,
-        sliderStyle: null,
-        processStyle: null,
+        bgStyle: {
+          backgroundColor: "#191D21"
+          //boxShadow: "inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)"
+        },
+        sliderStyle: {
+          backgroundColor: "#30B988"
+        },
+        processStyle: {
+          backgroundColor: "#30B988"
+        },
         piecewiseActiveStyle: null,
         piecewiseStyle: null,
-        tooltipStyle: null,
+        tooltipStyle: {
+          backgroundColor: "#30B988",
+          borderColor: "#30B988"
+        },
         labelStyle: null,
         labelActiveStyle: null
       }
@@ -609,6 +688,7 @@ export default {
 .eos-animation {
   opacity: 0;
   position: absolute;
+  left: 50px;
 }
 .eos-animation.animateUp {
   -webkit-animation: fadeOutUp 3s;

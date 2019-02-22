@@ -5,8 +5,8 @@ import Modal from 'buefy/dist/components/modal'
 import Snotify, { SnotifyPosition } from 'vue-snotify';
 import store from './store'
 
-import 'buefy/dist/buefy.css'
-require('./mystyles.scss')
+//import 'buefy/dist/buefy.css'
+require('./css/mystyles.scss')
 
 Vue.prototype.$contractAccount = 'casinosevens'
 

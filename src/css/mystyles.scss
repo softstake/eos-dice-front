@@ -1,0 +1,378 @@
+@charset "utf-8";
+
+/* Import Fonts*/
+@import url('./fonts/fonts.css');
+
+/*Set your brand colors*/
+$naviblue: #161C27;
+$primary-color: #30B988;/*30B988*/
+$pink: #FA7C91;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+$dark: #141A25;
+$footer-background-color: #0E121A;
+$footer-padding:0;
+/* Update Bulma's global variables*/
+/*$family-sans-serif: "Nunito", sans-serif;*/
+/*$grey-dark: $brown;
+$grey-light: $beige-light;*/
+$primary: $primary-color;
+/*$link: $pink;*/
+/*$widescreen-enabled: false;*/
+/*$fullhd-enabled: false;*/
+
+/* Update some of Bulma's component variables*/
+$body-background-color: $naviblue;
+$navbar-background-color: #141A25;
+$navbar-item-color:#D8D8D8;
+$navbar-item-hover-color:white;
+$navbar-item-hover-background-color:transparent;
+$navbar-breakpoint: 769px;
+$navbar-burger-color:white;
+$table-background-color:transparent;
+$table-head-cell-color:rgba(216,216,216,0.5);
+$table-cell-padding:1.1em 1.1em;
+$family-primary: 'Circe';
+$table-cell-border-width:0 0 9px;
+$table-cell-border : 1px solid $naviblue;
+$tabs-link-color:#D8D8D8;
+$tabs-link-hover-color:white;
+$tabs-link-hover-border-bottom-color:$primary-color;
+$tabs-border-bottom-color:transparent;
+$tabs-border-bottom-width:3px;
+$tabs-link-active-color:white;
+$tabs-link-active-border-bottom-color:$primary-color;
+$slider-thumb-background:$primary-color;
+$modal-card-body-background-color:#1F232B;
+$modal-card-head-background-color:#333941;
+$modal-card-title-color:white;
+$input-placeholder-color:white;
+/*$slider-output-background:$primary-color;*/
+/*$control-border-width: 2px;
+$input-border-color: transparent;
+$input-shadow: none;*/
+
+@import "~bulma/bulma.sass";
+@import "~vue-snotify/styles/simple";
+
+/*Custom css */
+.width100{
+	width: 100%;
+}
+html{
+	background-color: transparent;
+	/*background-color: #161b24;*/
+	/*background-image: url("../images/html-bg.png");*/
+}
+body{
+	background-color: #161C27;
+	/*background-image: url("../images/bg.png");*/
+	/*url("../images/bg.png"),linear-gradient(yellow, red)*/
+	background-repeat: repeat-x;
+}
+body::before {
+	content: "";
+	position: absolute;
+	height: 629px;
+	width: 100%;
+	background-image: linear-gradient(transparent, #161C27), url("../images/new-bg.png");
+}
+.site-header {
+		position: relative;
+		background-color: rgba(0, 0, 0, 0.6) !important;
+		display: flex;
+		box-shadow: 0 0 2px 4px rgba(0,0,0,0.3);
+		nav{
+			background-color: transparent;
+			max-height: 98px;
+			.logo{
+				max-height: 87px;
+				//width: 100%
+			}
+			.navbar-burger{
+				height: auto;
+			}
+			.navbar-burger:hover{
+				color: $primary-color;
+			}
+			.navbar-end .navbar-item .buttons a{
+				box-shadow: 0 0 6px 1px $primary, inset 0 0 6px 1px $primary;
+			}
+			.signup-btn{
+				font-size: 1rem;
+				padding: 21px 26px 19px 26px;
+			}
+		}
+	}
+.footer {
+	padding: 0px;
+	.footer-column{
+		
+		max-height: 120px;
+	}
+	.footer-logo{
+		display: inline-flex;
+	}
+	.logo {
+		max-height: 97px;
+	}
+	.social-icons > span{
+		margin: 0 6px;
+		vertical-align: middle;
+	}
+	.social-icons > span.message_btn{
+		margin-left: 30px;
+		margin-right: 0;
+		cursor: pointer;
+		position: fixed;
+		right: 19px;
+		content: "";
+		bottom: 80px;
+	}
+}
+	
+
+.bet-section{
+	padding: 70px 15px 45px 15px;
+	.container{
+		max-width: 663px;
+	}
+	.betbox {
+		background-color: #333941;
+		border-radius: 7px;
+		padding-top: 40px;
+		box-shadow: 0 2px 11px 10px rgba(0, 0, 0, 0.3);
+		.get_started_btn{
+			font-size: 16px;
+			padding: 21px 0 18px 0;
+		}
+		.bet_logo{
+			content: "";
+			position: absolute;
+			top: -44px;
+			margin: auto;
+			left: 0;
+			right: 0;
+			width: 114px;
+		}
+		.eos-icon{
+			width: 11px;
+		}
+		.column
+			.control{
+				.input{
+					background-color: #1F232B;
+					color: white;
+					border: none;
+					box-shadow: inset 0px 2px 4px 0px #191D21;
+				}
+				.button{
+					background-color: #1F232B;
+					color: white;
+					box-shadow: inset 0px 2px 4px 0px #191D21;
+					border-image: linear-gradient(to bottom, rgba(0,0,0,0) 25%,#30B988 25%,#30B988 75%,rgba(0,0,0,0) 75%);
+					border-image-slice: 1;
+				}
+			}
+			.control:last-child
+				.button{
+					border-right: none;
+					border-right-width:0;
+				}
+		.range-slide{
+			background-color: #1F232B;
+			color: white;
+			border: none;
+			box-shadow: inset 0px 2px 4px 0px #191D21;
+			border-radius: 4px;
+			min-height: 166px;
+			padding-top: 22px;
+			.payout{
+				border: 1px solid;
+				border-image: linear-gradient(to bottom, rgba(0,0,0,0) 20%,#30B988 20%,#30B988 80%,rgba(0,0,0,0) 80%);
+				border-image-slice: 1;
+			}
+			.bet-slider{
+				padding: 0 50px;
+				display: flex;
+				position: relative;
+				@media only screen and (max-width: 767px) {
+					padding:0 4px;
+				}
+				.slider-min-max{padding:7px 3px;}
+			}
+		}
+			
+	}
+}
+.bets_list 
+	.container{
+		max-width: 1043px;
+		overflow-y: auto;
+		padding-bottom:250px;
+	}
+	table
+		thead
+			tr
+				th:nth-child(3),th:nth-child(4),th:nth-child(5){
+					text-align: center;
+				}
+				th:nth-child(6){
+					text-align: right;
+				}
+		tbody
+			tr{
+				border-radius: 4px;
+				td:first-child{
+					border-top-left-radius: 12px;
+					border-bottom-left-radius: 12px;
+				}
+				td:last-child{
+					border-top-right-radius: 12px;
+					border-bottom-right-radius: 12px;
+					text-align: right;
+				}
+				td:nth-child(3),td:nth-child(4),td:nth-child(5){
+					text-align: center;
+				}
+			}
+			
+			tr.blue-row
+				td{
+					background-color: #0E121A;
+					color: $table-head-cell-color;
+				}
+			tr.green-row{
+				td{
+					background-color: #152E35;
+					color: $table-head-cell-color;	
+				}
+			}
+.modal-card-head{
+	/*border: 1px solid #979797;*/
+	border-bottom: none;
+	box-shadow: 0px 2px 4px 0px #191D21;
+	p{
+		padding-left: 25px;
+	}
+}
+.modal-card-body{
+	color: white;
+	padding: 45px;
+	p{
+		padding-bottom: 10px; 
+	}
+}
+.chat-box {
+	background-color: rgba(21, 46, 53, 1);
+	position: fixed;
+	width: inherit;
+	z-index: 99;
+	min-width: 230px;
+	height: 100vh;
+	bottom: 0;
+	.hero-head{
+		padding: 10px 15px;
+		background-color: rgba(21, 46, 53, 0.5);
+	}
+	.hero-body{
+		max-height: 85vh;
+		overflow-x: scroll;
+		.msgbox{
+			padding: 10px 0;
+			.msg_status{
+				width: 100%;
+				display: inline-block;
+				.msg_user{
+					color: white;
+					font-size: 12px;
+					float: left;
+				}
+				.msg_time{
+					color: white;
+					font-size: 12px;
+					float: right;
+				}
+			}
+			.msg{
+				color: white;
+				font-size: 14px;
+				a{
+					color: $primary-color;
+				}
+			}
+		}
+	}
+	.hero-foot{
+		padding: 15px;
+		input{
+			background-color: #1F232B;
+			box-shadow: inset 0px 2px 4px 0px #191D21;
+			color: #D8D8D8;
+			border: none;
+		}
+	}
+}
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+#mySidenav.openChat{
+	width: 375px;
+}
+#main {
+  transition: margin-right .5s;
+}
+#main.mainOpenChat{
+	margin-right: 375px;
+}
+@media screen and (min-width: 779px) and (max-width: 915px) {
+  #mySidenav.openChat{width: 230px}
+  #main.mainOpenChat{margin-right: 230px;}
+}
+@media screen and (min-width: 1088px) and (max-width: 1191px) {
+  #mySidenav.openChat{width: 276px}
+  #main.mainOpenChat{margin-right: 276px;}
+}
+@include mobile {
+    .container{
+    	padding-left: 15px;
+    	padding-right: 15px;
+    }
+    @media (max-width: 520px) {
+    	.footer
+    		.columns{
+    			display: block;
+    			.column{
+    				text-align: center!important;
+    			}
+    		}
+    }
+}
+@include mobile {
+    .container{
+    	padding-left: 15px;
+    	padding-right: 15px;
+    }
+    .site-header {
+    	display: block;
+    }
+    #mySidenav.openChat{
+		width: 100%;
+	}
+}
+@include tablet {
+    .container{
+    	padding-left: 15px;
+    	padding-right: 15px;
+    }
+}
