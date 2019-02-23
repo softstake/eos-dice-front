@@ -202,12 +202,18 @@
               </div>
               <div class="columns has-text-centered">
                 <div class="column">
-                  <vue-slider
-                    id="slider-handle"
-                    ref="slider"
-                    v-model="rollUnder"
-                    v-bind="sliderOptions"
-                  ></vue-slider>
+                  <div class="bet-slider">
+                    <span class="slider-min-max">2</span>
+                    <vue-slider
+                      style="width: 100%;"
+                      ref="slider"
+                      v-model="rollUnder"
+                      v-bind="sliderOptions"
+                    >
+                      <div class="slider-custom-dot" slot="dot" slot-scope="{ value }">{{ value }}</div>
+                    </vue-slider>
+                    <span class="slider-min-max">96</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -311,7 +317,7 @@ export default {
         eventType: "auto",
         width: "auto",
         height: 10,
-        dotSize: 20,
+        dotSize: 40,
         dotHeight: null,
         dotWidth: null,
         min: 2,
@@ -325,8 +331,7 @@ export default {
         enableCross: true,
         piecewiseStyle: false,
         piecewiseLabel: false,
-        tooltip: "always",
-        tooltipDir: "top",
+        tooltip: false,
         reverse: false,
         data: null,
         clickable: true,
