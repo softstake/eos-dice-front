@@ -4,6 +4,7 @@
     <dice-game/>
     <dice-orders/>
     <dice-footer/>
+    <dice-chat/>
   </div>
 </template>
 
@@ -15,7 +16,8 @@ export default {
     diceHeader: require("./components/header.vue").default,
     diceGame: require("./components/game.vue").default,
     diceOrders: require("./components/orders.vue").default,
-    diceFooter: require("./components/footer.vue").default
+    diceFooter: require("./components/footer.vue").default,
+    diceChat: require("./components/chat.vue").default
   },
   mounted() {
     eventHub.$on("SHOW_CHAT_EV", () => (this.mainOpenChat = true));

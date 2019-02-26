@@ -45,7 +45,7 @@
       </div>
     </footer>
     <!-- End of footer -->
-    <!-- Start Chat Box -->
+    <!-- Start Chat Box 
     <div id="mySidenav" class="sidenav" :class="{ 'openChat' : openChat }">
       <div class="chat-box hero">
         <div class="hero-head">
@@ -156,7 +156,7 @@
         </div>
       </div>
     </div>
-    <!-- End of Chat Box -->
+    End of Chat Box-->
   </div>
 </template>
 
@@ -164,19 +164,9 @@
 import eventHub from "../event.js";
 
 export default {
-  data() {
-    return {
-      openChat: false
-    };
-  },
   methods: {
     showChat() {
-      this.openChat = true;
       eventHub.$emit("SHOW_CHAT_EV");
-    },
-    hideChat() {
-      this.openChat = false;
-      eventHub.$emit("HIDE_CHAT_EV");
     }
   }
 };
