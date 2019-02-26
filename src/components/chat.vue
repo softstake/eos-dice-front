@@ -11,14 +11,7 @@
       <div class="hero-foot">
         <div class="field">
           <p class="control has-icons-right">
-            <input
-              class="input"
-              type="text"
-              placeholder="Hi"
-              value="Hello"
-              v-model="newMsg"
-              @keyup.enter="send"
-            >
+            <input class="input" type="text" placeholder="Hi" v-model="newMsg" @keyup.enter="send">
             <span class="icon is-small is-right">
               <i class="fas fa-location-arrow has-text-primary" data-fa-transform="rotate-45"></i>
             </span>
