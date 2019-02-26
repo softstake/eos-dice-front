@@ -210,7 +210,8 @@ body::before {
 					background-color: #30B988;
 					box-shadow: 0.5px 0.5px 2px 1px rgba(0,0,0,.32);
 				}
-				.slider-min-max{padding:14px 15px;}
+				.slider-min{color: rgba(216, 216, 216, 0.5); padding:17px 0px 17px 30px;}
+				.slider-max{color: rgba(216, 216, 216, 0.5); padding:17px 30px 17px 0px;}
 			}		
 		}	
 	}

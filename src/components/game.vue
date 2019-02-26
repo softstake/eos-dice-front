@@ -140,7 +140,7 @@
             <div class="field has-addons">
               <div class="control has-icons-left width100">
                 <input
-                  class="input is-medium"
+                  class="input is-medium has-text-weight-semibold"
                   type="number"
                   placeholder="Bet Amount"
                   v-model.trim="bet"
@@ -154,15 +154,27 @@
                 </span>
               </div>
               <div class="control">
-                <a class="button is-medium" @click="setBet(0.5); maxFlag=false;" id="halfBetBtn">
+                <a
+                  class="button is-medium has-text-weight-semibold"
+                  @click="setBet(0.5); maxFlag=false;"
+                  id="halfBetBtn"
+                >
                   <span>&#189;</span>
                 </a>
               </div>
               <div class="control">
-                <a class="button is-medium" @click="setBet(2); maxFlag=false;" id="twiceBetBtn">x2</a>
+                <a
+                  class="button is-medium has-text-weight-semibold"
+                  @click="setBet(2); maxFlag=false;"
+                  id="twiceBetBtn"
+                >x2</a>
               </div>
               <div class="control">
-                <a class="button is-medium" @click="setBet(); maxFlag=true;" id="maxBetBtn">MAX</a>
+                <a
+                  class="button is-medium has-text-weight-semibold"
+                  @click="setBet(); maxFlag=true;"
+                  id="maxBetBtn"
+                >MAX</a>
               </div>
             </div>
           </div>
@@ -170,7 +182,12 @@
             <label class="label has-text-white">PAYOUT ON WIN</label>
             <div class="field">
               <div class="control is-expanded has-icons-left">
-                <input class="input is-medium" type="number" v-model="payWin" readonly>
+                <input
+                  class="input is-medium has-text-weight-semibold"
+                  type="number"
+                  v-model="payWin"
+                  readonly
+                >
                 <span class="icon is-left">
                   <figure class="image eos-icon">
                     <img src="../images/eos-icon.png">
@@ -185,25 +202,31 @@
             <div class="range-slide">
               <div class="columns has-text-centered is-mobile">
                 <div class="column">
-                  <span class="is-size-7 is-block">ROLLUNDER TO WIN</span>
-                  <span class="is-size-4">
+                  <span
+                    class="is-size-7 is-block"
+                    style="color: rgba(216, 216, 216, 0.5);"
+                  >ROLLUNDER TO WIN</span>
+                  <span class="is-size-4 has-text-weight-semibold">
                     {{rollUnder}}
                     <i class="fas fa-arrow-down"></i>
                   </span>
                 </div>
                 <div class="column payout">
-                  <span class="is-size-7 is-block">PAYOUT</span>
-                  <span class="is-size-4">x{{Number(payOut).toFixed(2)}}</span>
+                  <span class="is-size-7 is-block" style="color: rgba(216, 216, 216, 0.5);">PAYOUT</span>
+                  <span class="is-size-4 has-text-weight-semibold">x{{Number(payOut).toFixed(2)}}</span>
                 </div>
                 <div class="column">
-                  <span class="is-size-7 is-block">WIN CHANCE</span>
-                  <span class="is-size-4">{{winChance}}%</span>
+                  <span
+                    class="is-size-7 is-block"
+                    style="color: rgba(216, 216, 216, 0.5);"
+                  >WIN CHANCE</span>
+                  <span class="is-size-4 has-text-weight-semibold">{{winChance}}%</span>
                 </div>
               </div>
               <div class="columns has-text-centered">
                 <div class="column">
                   <div class="bet-slider">
-                    <span class="slider-min-max">2</span>
+                    <span class="is-size-7 slider-min">2</span>
                     <vue-slider
                       style="width: 100%;"
                       ref="slider"
@@ -212,7 +235,7 @@
                     >
                       <div class="slider-custom-dot" slot="dot" slot-scope="{ value }">{{ value }}</div>
                     </vue-slider>
-                    <span class="slider-min-max">96</span>
+                    <span class="is-size-7 slider-max">96</span>
                   </div>
                 </div>
               </div>
@@ -233,7 +256,9 @@
             }"
               class="is-block is-size-5 eos-animation"
             >{{ animationText }}</span>
-            <span class="is-block is-size-5">{{Number(currentEOS).toFixed(4)}} EOS</span>
+            <span
+              class="is-block is-size-5 has-text-weight-semibold"
+            >{{Number(currentEOS).toFixed(4)}} EOS</span>
           </div>
           <div class="column">
             <a
@@ -256,7 +281,9 @@
                 <img src="../images/token.png">
               </figure>
             </span>
-            <span class="is-block is-size-5">{{Number(currentSVNS).toFixed(4)}} SEVENS</span>
+            <span
+              class="is-block is-size-5 has-text-weight-semibold"
+            >{{Number(currentSVNS).toFixed(4)}} SEVENS</span>
           </div>
         </div>
       </div>
