@@ -527,7 +527,10 @@ export default {
 
     roll() {
       if (!this.account.name) {
-        this.errors.push("Scatter not initialized");
+        this.$snotify.error("Scatter not initialized");
+        return;
+      } else if (this.currentEOS < 0.1) {
+        this.$snotify.error("Your EOS balance must be greater than 0.1");
         return;
       }
 
