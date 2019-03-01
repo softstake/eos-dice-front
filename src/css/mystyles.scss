@@ -52,6 +52,14 @@ $input-placeholder-color:white;
 /*$control-border-width: 2px;
 $input-border-color: transparent;
 $input-shadow: none;*/
+$dropdown-content-background-color: #161C27;
+//$dropdown-item-active-color: $primary-color;
+//$dropdown-content-arrow: #161C27;
+$dropdown-item-hover-background-color: $primary-color;
+//$dropdown-item-hover-color: #161C27;
+//$dropdown-divider-background-color: #161C27;
+$dropdown-item-active-background-color: $primary-color;
+$dropdown-item-color: #fff;
 
 @import "~bulma/bulma.sass";
 @import "~vue-snotify/styles/simple";
@@ -89,6 +97,14 @@ body::before {
 			.logo{
 				max-height: 87px;
 				//width: 100%
+			} 
+			.icon-down {
+				vertical-align: middle; 
+				line-height:10px;
+			}
+			.select-locale {
+				@extend .navbar-item;
+				padding: 0px;
 			}
 			.navbar-burger{
 				height: auto;

@@ -32,7 +32,7 @@ module.exports = {
       },
     },
     {
-      test: /\.(eot|svg|ttf|woff(2)?)$/,
+      test: /\.(eot|ttf|woff(2)?)$/,
       loader: 'file-loader',
       options: {
         name: 'css/fonts/[name].[ext]'
@@ -43,6 +43,9 @@ module.exports = {
       use: 'vue-loader'
     }
     ]
+  },
+  resolve: {
+    extensions: ['*', '.js', '.vue', '.json']
   },
   plugins: [
     new ExtractTextPlugin('css/mystyles.css'),

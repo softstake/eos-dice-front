@@ -5,22 +5,22 @@
       <div class="tabs is-centered">
         <ul>
           <li :class="{ 'is-active': !myBets }">
-            <a @click="myBets = false">All Bets</a>
+            <a @click="myBets = false">{{ $t('allBets') }}</a>
           </li>
           <li :class="{ 'is-active': myBets }">
-            <a @click="myBets = true">My Bets</a>
+            <a @click="myBets = true">{{ $t('myBets') }}</a>
           </li>
         </ul>
       </div>
       <table class="table is-fullwidth">
         <thead>
           <tr class="is-uppercase">
-            <th>Time</th>
-            <th>Bettor</th>
-            <th class="is-hidden-mobile">Roll Under</th>
-            <th>Bet</th>
-            <th class="is-hidden-mobile">Roll</th>
-            <th>Payout</th>
+            <th>{{ $t('time') }}</th>
+            <th>{{ $t('bettor') }}</th>
+            <th class="is-hidden-mobile">{{ $t('rollunder') }}</th>
+            <th>{{ $t('bet') }}</th>
+            <th class="is-hidden-mobile">{{ $t('roll') }}</th>
+            <th>{{ $t('payout') }}</th>
           </tr>
         </thead>
         <tbody>

@@ -136,7 +136,7 @@
         </figure>
         <div class="columns">
           <div class="column is-three-fifths has-text-white">
-            <label class="label has-text-white">BET AMOUNT</label>
+            <label class="label has-text-white">{{ $t('betAmount') }}</label>
             <div class="field has-addons">
               <div class="control has-icons-left width100">
                 <input
@@ -179,7 +179,7 @@
             </div>
           </div>
           <div class="column has-text-white">
-            <label class="label has-text-white">PAYOUT ON WIN</label>
+            <label class="label has-text-white">{{ $t('payoutOnWin') }}</label>
             <div class="field">
               <div class="control is-expanded has-icons-left">
                 <input
@@ -205,21 +205,24 @@
                   <span
                     class="is-size-7 is-block"
                     style="color: rgba(216, 216, 216, 0.5);"
-                  >ROLLUNDER TO WIN</span>
+                  >{{ $t('rollunderToWin') }}</span>
                   <span class="is-size-4 has-text-weight-semibold">
                     {{rollUnder}}
                     <i class="fas fa-arrow-down"></i>
                   </span>
                 </div>
                 <div class="column payout">
-                  <span class="is-size-7 is-block" style="color: rgba(216, 216, 216, 0.5);">PAYOUT</span>
+                  <span
+                    class="is-size-7 is-block"
+                    style="color: rgba(216, 216, 216, 0.5);"
+                  >{{ $t('ratio') }}</span>
                   <span class="is-size-4 has-text-weight-semibold">x{{Number(payOut).toFixed(2)}}</span>
                 </div>
                 <div class="column">
                   <span
                     class="is-size-7 is-block"
                     style="color: rgba(216, 216, 216, 0.5);"
-                  >WIN CHANCE</span>
+                  >{{ $t('winChance') }}</span>
                   <span class="is-size-4 has-text-weight-semibold">{{winChance}}%</span>
                 </div>
               </div>
@@ -267,13 +270,13 @@
               @click="roll"
               :class="{ 'is-loading': this.isLoading  }"
               id="rollBtn"
-            >ROLL DICE</a>
+            >{{ $t('rollDice') }}</a>
             <a
               class="button is-primary is-fullwidth is-medium get_started_btn"
               v-else
               @click="login"
               id="loginBtn"
-            >GET STARTED</a>
+            >{{ $t('getStarted') }}</a>
           </div>
           <div class="column has-text-centered has-text-white">
             <span class="icon">

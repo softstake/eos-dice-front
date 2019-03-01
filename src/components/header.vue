@@ -30,19 +30,23 @@
               aria-haspopup="true"
               @click="showAffiliateModal"
               href="JavaScript:;"
-            >Affiliate</a>
+            >{{ $t('affiliate') }}</a>
             <a
               class="navbar-item modal-button"
               aria-haspopup="true"
               @click="showHelpModal"
               href="JavaScript:;"
-            >How to play</a>
+            >{{ $t('howToPlay') }}</a>
             <a
               class="navbar-item modal-button"
               aria-haspopup="true"
               @click="showAirdropModal"
               href="JavaScript:;"
-            >Tokens Airdrop</a>
+            >{{ $t('tokensAirdrop') }}</a>
+
+            <div class="navbar-item">
+              <language-switcher></language-switcher>
+            </div>
 
             <div class="navbar-item">
               <div class="buttons">
@@ -50,12 +54,12 @@
                   v-if="account.name"
                   @click="logout"
                   class="button signup-btn is-primary is-outlined is-medium"
-                >Logout {{account.name}}</a>
+                >{{ $t('logout', { acc_name: account.name }) }}</a>
                 <a
                   v-else
                   @click="login"
                   class="button signup-btn is-primary is-outlined is-medium"
-                >Login</a>
+                >{{ $t('login') }}</a>
               </div>
             </div>
           </div>
@@ -72,9 +76,14 @@ import ScatterJS from "scatterjs-core";
 import { network } from "../network.js";
 import eventHub from "../event.js";
 
+import languageSwitcher from "./languageSwitcher.vue";
+
 const scatter = ScatterJS.scatter;
 
 export default {
+  components: {
+    languageSwitcher
+  },
   data() {
     return {
       showNav: false

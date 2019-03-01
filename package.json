@@ -29,6 +29,8 @@
     "scatterjs-plugin-eosjs2": "^1.2.0",
     "style-loader": "^0.23.1",
     "vue": "^2.5.17",
+    "vue-flag-icon": "^1.0.6",
+    "vue-i18n": "^8.8.2",
     "vue-loader": "^15.4.2",
     "vue-snotify": "^3.2.1",
     "vue-style-loader": "^4.1.2",
