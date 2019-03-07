@@ -9,5 +9,5 @@ export const network = {
     chainId: isMainNet ? 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' : 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
 }
 
-export const apiUrl = isMainNet ? 'https://eos777.io/api/bets' : 'https://jungle.eos777.io/api/bets' // url.protocol + '//' + url.hostname + '/api/bets'
-export const chatUrl = isMainNet ? 'wss://eos777.io/api/chat' : 'wss://' + url.hostname + '/api/chat'
+export const apiUrl = isMainNet ? 'https://api.eos777.io/bets' : 'https://api.eos777.pw/bets' // url.protocol + '//' + url.hostname + '/api/bets'
+export const chatUrl = isMainNet ? 'wss://api.eos777.io/chat' : 'wss://api.eos777.pw/chat'
