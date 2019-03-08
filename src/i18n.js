@@ -10,7 +10,7 @@ const messages = {
         tokensAirdrop: "Tokens airdrop",
         betAmount: "BET AMOUNT",
         payoutOnWin: "PAYOUT ON WIN",
-        rollunderToWin: "ROLLUNDER TO WIN",
+        rollunderToWin: "ROLLUNDER",
         ratio: "PAYOUT",
         winChance: "WIN CHANCE",
         rollDice: "ROLL DICE",
@@ -22,7 +22,7 @@ const messages = {
         bet: "BET",
         roll: "ROLL",
         payout: "PAYOUT",
-        getStarted: "GET STARTED",
+        getStarted: "LOGIN",
         login: "Login",
         logout: "Logout {acc_name}"
     },

@@ -25,9 +25,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="o in orders"
-            :class="[ o.RandomRoll < o.RollUnder ? 'green-row' : 'blue-row' ]"
-          >
+            v-for="(o, index) in orders" :key="index" :class="[ o.RandomRoll < o.RollUnder ? 'green-row' : 'blue-row' ]">
             <td>{{ dateFormat(o.CreatedAt) }}</td>
             <td>{{ o.PlayerName }}</td>
             <td class="is-hidden-mobile">{{ o.RollUnder }}</td>
@@ -38,9 +36,7 @@
         </tbody>
       </table>
       <section v-if="errored">
-        <p
-          align="center"
-        >We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+        <p align="center">We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
       </section>
     </div>
   </section>
@@ -94,7 +90,7 @@ export default {
     }
   },
   mounted() {
-    setInterval(this.fetchOrders, 2000);
+    setInterval(this.fetchOrders, 500);
   },
   watch: {
     myBets: function() {

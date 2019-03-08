@@ -19,7 +19,7 @@
     </div>
     <div class="dropdown-menu" id="dropdown-menu" role="menu">
       <div class="dropdown-content">
-        <a v-for="l in languages" class="dropdown-item" @click="active=l">
+        <a v-for="(l, index) in languages" :key="index" class="dropdown-item" @click="active=l">
           <span class="icon">
             <flag :iso="l.flag"/>
           </span>
