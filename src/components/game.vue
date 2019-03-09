@@ -357,7 +357,7 @@ export default {
         speed: 0.1,
         disabled: false,
         piecewise: false,
-        usdKeyboard: false,
+        usdKeyboard: true,
         enableCross: true,
         piecewiseStyle: false,
         piecewiseLabel: false,

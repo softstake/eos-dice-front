@@ -19,7 +19,7 @@
     </div>
     <div class="dropdown-menu" id="dropdown-menu" role="menu">
       <div class="dropdown-content">
-        <a v-for="(l, index) in languages" :key="index" class="dropdown-item" @click="active=l">
+        <a v-for="(l, index) in locales" :key="index" class="dropdown-item" @click="active=l">
           <span class="icon">
             <flag :iso="l.flag"/>
           </span>
@@ -36,25 +36,26 @@ export default {
   data() {
     return {
       showLangs: false,
-      languages: [
+      locales: [
         { flag: "gb", language: "en", title: "English" },
         { flag: "ru", language: "ru", title: "Русский" }
       ],
-      active: null
+      active: undefined
     };
   },
   methods: {
     changeLocale(locale) {
       this.$i18n.locale = locale;
+      this.showLangs = false;
+      this.$store.commit("UPDATE_LOCALE", this.active);
     }
   },
   created() {
-    const en = this.languages[0];
-    this.active = en;
+    this.active = this.$store.state.locale ? this.$store.state.locale : this.locales[0];
   },
   watch: {
     active: function() {
-      this.changeLocale(this.active.language);
+          this.changeLocale(this.active.language);
     }
   }
 };

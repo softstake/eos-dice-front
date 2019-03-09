@@ -2,12 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import Toast from 'buefy/dist/components/toast'
 import Modal from 'buefy/dist/components/modal'
-import Snotify, { SnotifyPosition } from 'vue-snotify';
-import FlagIcon from 'vue-flag-icon';
+import Snotify, { SnotifyPosition } from 'vue-snotify'
+import FlagIcon from 'vue-flag-icon'
 import store from './store'
 import i18n from './i18n'
 
-//import 'buefy/dist/buefy.css'
 require('./css/mystyles.scss')
 
 Vue.prototype.$contractAccount = 'casinosevens'
@@ -25,7 +24,7 @@ const options = {
 Vue.use(Toast)
 Vue.use(Modal)
 Vue.use(Snotify, options)
-Vue.use(FlagIcon);
+Vue.use(FlagIcon)
 
 new Vue({
     i18n,
