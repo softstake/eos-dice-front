@@ -5,7 +5,7 @@ Vue.use(VueI18n)
 
 const messages = {
     'en': {
-        affiliate: 'Affiliate',
+        affiliate: "Affiliate",
         howToPlay: "How to play",
         tokensAirdrop: "Tokens airdrop",
         betAmount: "BET AMOUNT",
@@ -27,7 +27,7 @@ const messages = {
         logout: "Logout {acc_name}"
     },
     'ru': {
-        affiliate: 'Сотрудничество',
+        affiliate: "Партнерская программа",
         howToPlay: "Как играть",
         tokensAirdrop: "Начисление токенов",
         betAmount: "РАЗМЕР СТАВКИ",
@@ -45,8 +45,8 @@ const messages = {
         roll: "ВЫПАЛО",
         payout: "ВЫИГРЫШ",
         getStarted: "НАЧАТЬ",
-        login: "Вход",
-        logout: "Выход {acc_name}"
+        login: "Войти",
+        logout: "Выйти {acc_name}"
     }
 }
 
