@@ -629,7 +629,7 @@ export default {
     },
 
     maxBetAmount() {
-      return this.floor(this.availableBalance / (5 * this.payOut - 1), 4);
+      return this.floor(this.availableBalance / (2 * this.payOut - 1), 4);
     },
 
     login() {
